@@ -70,6 +70,9 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+
+// Load some sample accounts for testing
+// TODO - remove later
 sampleAccounts.forEach(account => {
   saveUserIdbAsync(account.CardNumber, account)
 })

@@ -1,6 +1,12 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { loadUserDataFromIdbAsync } from "../data/allAccountIDs";
 
 const AdminMenu: React.FC = () => {
+  useEffect(() => {
+    loadUserDataFromIdbAsync();
+  }, []);
+
   return (
     <>
       <div>

@@ -28,29 +28,29 @@ const App: React.FC = () => {
 
   const handleRegisterUser = () => {
     alert("Registration Successful");
+    // TODO - implement validation
   };
 
   const handleLoginUser = () => {
     alert("Login Successful");
-    
+    // TODO - implement validation
   };
 
   const handleLogOutUser = () => {
     alert(`User ${currentUser.Username} has Logged Out`);
     setCurrentUser({ ...emptyUser() });
+    // TODO - implement validation
   };
 
+  // TODO - List State Up
   // const handleDeposit = (amount: number) => {
   //   currentUser.Balance = currentUser.Balance + amount;
   //   setCurrentUser({ ...currentUser });
   // };
-
   // const handleWithdraw = (amount: number) => {
   //   currentUser.Balance = currentUser.Balance - amount;
   //   setCurrentUser({ ...currentUser });
   // };
-
-
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

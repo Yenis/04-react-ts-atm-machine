@@ -2,15 +2,17 @@ import { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { isCardValid } from "../validation/validateCard";
 import { isPinValid } from "../validation/validatePIN";
 import { saveUserIdbAsync } from "../data/Users";
-import { useCurrentUser } from "../data/currentUser";
+import { useCurrentUser, User } from "../data/currentUser";
 import { isUnique } from "../validation/validateUnique";
 import { assignUserAccount } from "../helpers/assignUserAccount";
 import { Link } from "react-router-dom";
 
 interface RegisterFormProps {
-  setCurrentUser: (arg0: { CardNumber: string; Username: string; PIN: string; Balance: number; }) => void
+  setCurrentUser: (arg0: User) => void
   registerUser: MouseEventHandler<HTMLButtonElement> | undefined;
 }
+
+// TODO - Rebuild this Component completely
 
 const RegisterForm: React.FC<RegisterFormProps> = (props) => {
   const inputRef = useRef() as React.MutableRefObject<any>;

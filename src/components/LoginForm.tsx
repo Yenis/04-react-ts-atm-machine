@@ -28,6 +28,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
     handleLogin(e.target.value)
   };
 
+  // TODO - implement Pin Validation
   return (
     <>
       <h2>Please Provide your card number and PIN</h2>
