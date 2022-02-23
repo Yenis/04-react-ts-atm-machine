@@ -1,56 +1,58 @@
-export const sampleAccounts = [
+import { User } from "./currentUser";
+
+export const sampleAccounts: User[] = [
     {
-        CardNumber: "1111111111111111",
-        Username: "Sample User 1",
-        PIN: "11111",
-        Balance: 0
+        cardNumber: "1111111111111111",
+        userName: "Sample User 1",
+        pin: "11111",
+        balance: 0
     },
     {
-        CardNumber: "2222222222222222",
-        Username: "Sample User 2",
-        PIN: "22222",
-        Balance: 1000
+        cardNumber: "2222222222222222",
+        userName: "Sample User 2",
+        pin: "22222",
+        balance: 1000
     },
     {
-        CardNumber: "3333333333333333",
-        Username: "Sample User 3",
-        PIN: "33333",
-        Balance: 5000
+        cardNumber: "3333333333333333",
+        userName: "Sample User 3",
+        pin: "33333",
+        balance: 5000
     },
     {
-        CardNumber: "4444444444444444",
-        Username: "Sample User 4",
-        PIN: "44444",
-        Balance: 12345
+        cardNumber: "4444444444444444",
+        userName: "Sample User 4",
+        pin: "44444",
+        balance: 12345
     },
     {
-        CardNumber: "5555555555555555",
-        Username: "Sample User 5",
-        PIN: "55555",
-        Balance: 55555
+        cardNumber: "5555555555555555",
+        userName: "Sample User 5",
+        pin: "55555",
+        balance: 55555
     },
     {
-        CardNumber: "6666666666666666",
-        Username: "Sample User 6",
-        PIN: "66666",
-        Balance: 66666
+        cardNumber: "6666666666666666",
+        userName: "Sample User 6",
+        pin: "66666",
+        balance: 66666
     },
     {
-        CardNumber: "7777777777777777",
-        Username: "Sample User 7",
-        PIN: "77777",
-        Balance: 70000
+        cardNumber: "7777777777777777",
+        userName: "Sample User 7",
+        pin: "77777",
+        balance: 70000
     },
     {
-        CardNumber: "8888888888888888",
-        Username: "Sample User 8",
-        PIN: "88888",
-        Balance: 100000
+        cardNumber: "8888888888888888",
+        userName: "Sample User 8",
+        pin: "88888",
+        balance: 100000
     },
     {
-        CardNumber: "9999999999999999",
-        Username: "Sample User 9",
-        PIN: "99999",
-        Balance: 15000000
+        cardNumber: "9999999999999999",
+        userName: "Sample User 9",
+        pin: "99999",
+        balance: 15000000
     },
 ]

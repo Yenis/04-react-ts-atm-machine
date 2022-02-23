@@ -1,22 +1,17 @@
 import { User } from "./currentUser";
-import { allCurrentUsersIdbAsync, getUserIdbAsync } from "./Users";
+import { getAllUsersInfoAsync, getUserInfoAsync } from "./userData";
 
-export const allUserKeys: any[] = [];
-export const allAccountsData: User[] = [];
+export const allAccounts: User[] = [];
 
-export async function loadUserDataFromIdbAsync() {
-  const users = await allCurrentUsersIdbAsync();
-  users.forEach((user) => {
-    allUserKeys.push(user);
-  });
-  users.forEach((user) => {
-    getUser(user).then((result) => {
-      allAccountsData.push(result);
-    });
+export async function loadUserDataFromDbAsync() {
+  const users = await getAllUsersInfoAsync();
+  users.forEach(async (cardNumber) => {
+    let account = await getUser(cardNumber)
+      allAccounts.push(account);
   });
 }
 
 async function getUser(key: IDBValidKey | IDBKeyRange) {
-  let data = await getUserIdbAsync(key);
+  let data = await getUserInfoAsync(key);
   return data;
 }

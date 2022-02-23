@@ -1,16 +1,16 @@
-import { MouseEventHandler } from "react";
 import { Link } from "react-router-dom";
 import { useCurrentUser} from "../data/currentUser";
-import MainMenuButtons from "./MainMenu/MainButtons";
-import MainMenuHeader from "./MainMenu/MainHeader";
+import { MouseEventHandler } from "react";
+import MainMenuButtons from "../components/MainMenuButtons";
+import MainMenuHeader from "../components/MainMenuHeader";
 
 interface MainMenuProps {
-  setCurrentUser: (arg0: { CardNumber: string; Username: string; PIN: string; Balance: number; }) => void
-  logOut: MouseEventHandler<HTMLButtonElement> | undefined
+  handleLogOutUser: MouseEventHandler<HTMLButtonElement> | undefined
 }
 
 const MainMenuPage: React.FC<MainMenuProps> = (props) => {
-  const currentUser = useCurrentUser()
+  const { userContext } = useCurrentUser()
+  const currentUser = userContext;
   
   return (
     <div>
@@ -18,7 +18,7 @@ const MainMenuPage: React.FC<MainMenuProps> = (props) => {
         <MainMenuButtons />
         <br />
         <Link to="/">
-        <button onClick={props.logOut}>LOGOUT</button>
+        <button onClick={props.handleLogOutUser}>LOGOUT</button>
       </Link>
     </div>
   );

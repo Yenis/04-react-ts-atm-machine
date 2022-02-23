@@ -57,9 +57,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './components/App';
+import './index.css'
 
-import { sampleAccounts } from './data/nineSampleAccounts'
-import { saveUserIdbAsync } from './data/Users';
+// import { sampleAccounts } from './data/nineSampleAccounts'
+// import { saveTransactionResultsAsync } from './data/transactions';
+// // Load some sample accounts for testing
+// // TODO - remove later
+// sampleAccounts.forEach(account => {
+//   saveTransactionResultsAsync(account.cardNumber, account)
+// })
 
 ReactDOM.render(
   <React.StrictMode>
@@ -69,10 +75,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-
-// Load some sample accounts for testing
-// TODO - remove later
-sampleAccounts.forEach(account => {
-  saveUserIdbAsync(account.CardNumber, account)
-})

@@ -1,90 +1,59 @@
-import React, { useEffect, useState } from "react";
-import HomePage from "../pages/Home";
-import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterFrom";
+import React, { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import { loadUserDataFromDbAsync } from "../data/allAccountIDs";
+import { TopLayout, HomePage } from "../pages/Home";
+import LoginPage from "../pages/Login";
+import RegisterPage from "../pages/Register";
+import MainMenuPage from "../pages/Main";
 import StatusPage from "../pages/MainMenu/Status";
 import DepositPage from "../pages/MainMenu/Deposit";
 import WithdrawPage from "../pages/MainMenu/Withdraw";
-
-import { CurrentUserContext, emptyUser } from "../data/currentUser";
-import { Routes, Route } from "react-router-dom";
-import MainMenuPage from "../pages/Main";
-import { loadUserDataFromIdbAsync } from "../data/allAccountIDs";
 import AdminMenu from "../pages/Admin";
 import AdminServicePage from "../pages/Service";
+import {
+  ActionType,
+  useCurrentUser,
+  CurrentUserContext,
+  emptyUser,
+} from "../data/currentUser";
+import { toast, ToastType } from "../helpers/ToastManager";
 
-// enum ActivePage {
-//   Login,
-//   Register,
-// }
-//  {const [activePage, setActivePage] = useState<ActivePage>(ActivePage.Login);}
 
 const App: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState(emptyUser());
+  const { currentUser, dispatch } = useCurrentUser();
 
   useEffect(() => {
-    loadUserDataFromIdbAsync();
-  });
-
-  const handleRegisterUser = () => {
-    alert("Registration Successful");
-    // TODO - implement validation
-  };
-
-  const handleLoginUser = () => {
-    alert("Login Successful");
-    // TODO - implement validation
-  };
+    loadUserDataFromDbAsync();
+  }, []);
 
   const handleLogOutUser = () => {
-    alert(`User ${currentUser.Username} has Logged Out`);
-    setCurrentUser({ ...emptyUser() });
-    // TODO - implement validation
+    dispatch({ type: ActionType.EMPTY, payload: { ...emptyUser } });
+    toast.show({
+      title: ToastType.SUCCESS,
+      content: `User: ${currentUser.userName} has Logged Out`,
+      duration: 5000,
+    });
   };
-
-  // TODO - List State Up
-  // const handleDeposit = (amount: number) => {
-  //   currentUser.Balance = currentUser.Balance + amount;
-  //   setCurrentUser({ ...currentUser });
-  // };
-  // const handleWithdraw = (amount: number) => {
-  //   currentUser.Balance = currentUser.Balance - amount;
-  //   setCurrentUser({ ...currentUser });
-  // };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
+      <TopLayout />
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
         <Route
           path="LoginPage"
-          element={
-            <LoginForm
-              setCurrentUser={setCurrentUser}
-              loginUser={handleLoginUser}
-            />
-          }
+          element={<LoginPage setCurrentUser={dispatch} />}
         ></Route>
         <Route
           path="MainMenu"
-          element={
-            <MainMenuPage
-              setCurrentUser={setCurrentUser}
-              logOut={handleLogOutUser}
-            />
-          }
+          element={<MainMenuPage handleLogOutUser={handleLogOutUser} />}
         ></Route>
         <Route path="MainMenu/StatusPage" element={<StatusPage />}></Route>
-        <Route path="MainMenu/DepositPage" element={<DepositPage />}></Route>
-        <Route path="MainMenu/WithdrawPage" element={<WithdrawPage />}></Route>
+        <Route path="MainMenu/DepositPage" element={<DepositPage setCurrentUser={dispatch}/>}></Route>
+        <Route path="MainMenu/WithdrawPage" element={<WithdrawPage setCurrentUser={dispatch}/>}></Route>
         <Route
           path="RegisterPage"
-          element={
-            <RegisterForm
-              setCurrentUser={setCurrentUser}
-              registerUser={handleRegisterUser}
-            />
-          }
+          element={<RegisterPage setCurrentUser={dispatch} />}
         ></Route>
         <Route path="AdminPage" element={<AdminMenu />}></Route>
         <Route path="ServicePage" element={<AdminServicePage />}></Route>

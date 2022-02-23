@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
 import Receipt from "../../components/PrintedReceipt";
+import { Link } from "react-router-dom";
 import { useCurrentUser } from "../../data/currentUser";
-import MainMenuHeader from "./MainHeader";
+import MainMenuHeader from "../../components/MainMenuHeader";
 
 const StatusPage: React.FC = () => {
-  const currentUser = useCurrentUser();
+  const { userContext } = useCurrentUser()
+  const currentUser = userContext;
   return (
     <>
       <MainMenuHeader currentUser={currentUser} />

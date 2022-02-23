@@ -1,14 +1,22 @@
 import { User } from "../data/currentUser";
 
+export let dateToday = new Date()
+export let timeNow = `${dateToday.getHours()}:${dateToday.getMinutes()}:${dateToday.getSeconds()}`;
+
+export enum TransactionType {
+  WITHDRAW = 'WITHDRAW',
+  DEPOSIT = 'DEPOSIT'
+}
+
 interface ReceiptProps {
-  type?: string;
-  success?: string;
+  type?: TransactionType;
+  isSuccessful?: boolean;
   amount?: number;
   currentUser: User;
 }
 
 const Receipt: React.FC<ReceiptProps> = (props) => {
-  let today = new Date();
+  let today = dateToday;
 
   return (
     <div>
@@ -16,24 +24,23 @@ const Receipt: React.FC<ReceiptProps> = (props) => {
       <h2>
         Time:{`${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`}
       </h2>
-      {props.type && <h3>Transaction Type: {props.type}</h3>}
-      {props.success && <h3>Transaction Success: {props.success}</h3>}
+      {props.isSuccessful && <h3>Transaction Success: {props.isSuccessful ? "true" : "false"}</h3>}
       {props.amount && <h3>Amount: {props.amount}.00</h3>}
 
-      {props.amount && props.type === "Deposit" && (
+      {props.amount && props.type === TransactionType.DEPOSIT && typeof props.currentUser.balance !== "undefined" && (
         <h3>
-          Previous Balance: {props.currentUser.Balance - props.amount}
+          Previous balance: {props.currentUser.balance - props.amount}
           .00
         </h3>
       )}
-      {props.amount && props.type === "Withdraw" && (
+      {props.amount && props.type === TransactionType.WITHDRAW && typeof props.currentUser.balance !== "undefined" &&  (
         <h3>
-          Previous Balance: {props.currentUser.Balance + props.amount}
+          Previous balance: {props.currentUser.balance + props.amount}
           .00
         </h3>
       )}
 
-      <h3>Current Balance: {props.currentUser.Balance}.00</h3>
+      <h3>Current balance: {props.currentUser.balance}.00</h3>
     </div>
   );
 };

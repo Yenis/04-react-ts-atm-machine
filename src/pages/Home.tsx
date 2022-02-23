@@ -1,11 +1,34 @@
 import { Link } from "react-router-dom";
+import { useCurrentUser } from "../data/currentUser";
+import React, { useEffect, useState } from "react";
 
-const HomePage: React.FC = () => {
+export const TopLayout: React.FC = () => {
+  const { userContext } = useCurrentUser();
+  const currentUser = userContext;
+
+  const [time, setTime] = useState(new Date().toLocaleString());
+  useEffect(() => {
+    let secTimer = setInterval(() => {
+      setTime(new Date().toLocaleString());
+    }, 1000);
+
+    return () => clearInterval(secTimer);
+  }, []);
+
+  return (
+    <div>
+      <h2>Welcome to ATM</h2>
+      <h3>
+        Current User: {currentUser.userName ? currentUser.userName : "N/A"}
+      </h3>
+      <h3>{time}</h3>
+    </div>
+  );
+};
+
+export const HomePage: React.FC = () => {
   return (
     <>
-      <div>
-        <h1>Welcome to ATM</h1>
-      </div>
       <div>
         <Link to="/LoginPage">
           <button>LOGIN</button>
@@ -19,5 +42,3 @@ const HomePage: React.FC = () => {
     </>
   );
 };
-
-export default HomePage;

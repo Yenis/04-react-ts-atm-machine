@@ -1,57 +1,89 @@
-import { useRef, useState } from "react";
+import { Action, ActionType, useCurrentUser } from "../../data/currentUser";
+import { useState } from "react";
+import Receipt, {
+  dateToday,
+  timeNow,
+  TransactionType,
+} from "../../components/PrintedReceipt";
+import MainMenuHeader from "../../components/MainMenuHeader";
+import { hasEnoughMoney } from "../../validation/validateAmount";
 import { Link } from "react-router-dom";
-import { useCurrentUser } from "../../data/currentUser";
-import { hasEnoughMoney } from "../../validation/validateCard";
-import Receipt from "../../components/PrintedReceipt";
-import MainMenuHeader from "./MainHeader";
-import { saveTransactionResultIdbAsync } from "../../helpers/saveTransactionResult";
+import { toast, ToastType } from "../../helpers/ToastManager";
+import { saveTransactionResultsAsync } from "../../data/transactions";
 
-interface WithdrawPageProps {}
+interface WithdrawPageProps {
+  setCurrentUser: (arg0: Action) => void
+}
 
 const WithdrawPage: React.FC<WithdrawPageProps> = (props) => {
-  const [isWithdrawn, completeTransaction] = useState(false);
-  const inputRef = useRef() as React.MutableRefObject<any>;
-  const currentUser = useCurrentUser();
+  const [isComplete, completeTransaction] = useState(false);
+  const [input, setInput] = useState("");
 
-  const handleWithdraw = () => {
-    if (inputRef.current.value) {
-      if (
-        hasEnoughMoney(currentUser.Balance, parseFloat(inputRef.current.value))
-      ) {
-        alert(`Withdrawn ${inputRef.current.value} Imaginary Dolars`);
-        currentUser.Balance =
-          currentUser.Balance - parseFloat(inputRef.current.value);
-          saveTransactionResultIdbAsync(currentUser.CardNumber, { ...currentUser });
-        completeTransaction(true);
-      } else {
-        alert(
-          `Cannot Withdraw More Cash than Available. Current Status is ${currentUser.Balance}.00    `
-        );
-        inputRef.current.value = null;
-      }
+  const { userContext } = useCurrentUser();
+  const currentUser = userContext;
+
+  const handleWithdraw = async () => {
+    if (!currentUser.cardNumber) return;
+    if (!currentUser.balance) return;
+    if (!input) return;
+
+    if (hasEnoughMoney(currentUser.balance, parseFloat(input))) {
+      currentUser.balance = currentUser.balance - parseFloat(input);
+      props.setCurrentUser({ type: ActionType.WITHDRAW, payload: { ...currentUser } });
+      
+      await saveTransactionResultsAsync(
+        currentUser.cardNumber,
+        { ...currentUser },
+        {
+          transactionType: TransactionType.WITHDRAW,
+          amount: parseFloat(input),
+          date: dateToday.toLocaleDateString(),
+          time: timeNow,
+        }
+      );
+      toast.show({
+        title: ToastType.SUCCESS,
+        content: `Withdrawn ${input} Imaginary Dolars`,
+        duration: 3000,
+      });
+      completeTransaction(true);
+    } else {
+      toast.show({
+        title: ToastType.ERROR,
+        content: `Cannot Withdraw More Cash than Available. Current Status is ${currentUser.balance}.00`,
+        duration: 9000,
+      });
     }
   };
 
   return (
     <>
-      {!isWithdrawn && (
+      {!isComplete && (
         <>
           <MainMenuHeader currentUser={currentUser} />
           <input
             type="number"
-            ref={inputRef}
+            value={input}
             min={0}
             placeholder="Enter Amount..."
+            onChange={(e) => setInput(e.target.value)}
           />
-          <button onClick={handleWithdraw}>WITHDRAW</button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleWithdraw();
+            }}
+          >
+            WITHDRAW
+          </button>
         </>
       )}
 
-      {isWithdrawn && (
+      {isComplete && (
         <Receipt
-          type="Withdraw"
-          success={inputRef.current.value ? "true" : "false"}
-          amount={parseFloat(inputRef.current.value)}
+          type={TransactionType.WITHDRAW}
+          isSuccessful={isComplete ? true : false}
+          amount={parseFloat(input)}
           currentUser={currentUser}
         />
       )}

@@ -1,10 +1,10 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { loadUserDataFromIdbAsync } from "../data/allAccountIDs";
+import { useEffect } from "react";
+import { loadUserDataFromDbAsync } from "../data/allAccountIDs";
 
 const AdminMenu: React.FC = () => {
   useEffect(() => {
-    loadUserDataFromIdbAsync();
+    loadUserDataFromDbAsync();
   }, []);
 
   return (

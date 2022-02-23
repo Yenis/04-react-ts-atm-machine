@@ -1,12 +1,13 @@
 
 import { Link } from "react-router-dom";
-import { allAccountsData } from "../data/allAccountIDs";
-
+import { allAccounts } from "../data/allAccountIDs";
 
 const AdminServicePage: React.FC = () => {
   let total = 0;
-  allAccountsData.forEach(account => {
-    total = total + account.Balance
+  allAccounts.forEach(account => {
+    if (account.balance) {
+      total = total + account.balance
+    }
   })
   
   return (
@@ -14,9 +15,7 @@ const AdminServicePage: React.FC = () => {
       <div>
       <h2>_ADMIN_SERVICE_PAGE_</h2>
         <br />
-        <h3>_total_cash_inside_</h3>
-        <br />
-        <h2>{total}.00</h2>
+        <h3>_total_cash_inside_ : _{total}.00_</h3>
         <br />
         <Link to="/AdminPage">
         <button>RETURN</button>

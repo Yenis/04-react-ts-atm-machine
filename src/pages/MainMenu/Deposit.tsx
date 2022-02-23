@@ -1,48 +1,80 @@
-import { useRef, useState } from "react";
+import { Action, ActionType, useCurrentUser } from "../../data/currentUser";
+import { useState } from "react";
+import Receipt, {
+  dateToday,
+  timeNow,
+  TransactionType,
+} from "../../components/PrintedReceipt";
+import MainMenuHeader from "../../components/MainMenuHeader";
 import { Link } from "react-router-dom";
-import { useCurrentUser } from "../../data/currentUser";
-import Receipt from "../../components/PrintedReceipt";
-import MainMenuHeader from "./MainHeader";
-import { saveTransactionResultIdbAsync } from "../../helpers/saveTransactionResult";
+import { toast, ToastType } from "../../helpers/ToastManager";
+import { saveTransactionResultsAsync } from "../../data/transactions";
 
-interface DepositPageProps {}
+interface DepositPageProps {
+  setCurrentUser: (arg0: Action) => void
+}
 
 const DepositPage: React.FC<DepositPageProps> = (props) => {
-  const [isDeposited, completeTransaction] = useState(false);
-  const inputRef = useRef() as React.MutableRefObject<any>;
-  const currentUser = useCurrentUser();
+  const [isComplete, completeTransaction] = useState(false);
+  const [input, setInput] = useState("");
 
-  const handleDeposit = () => {
-    if (inputRef.current.value) {
-      alert(`Deposited ${inputRef.current.value} Imaginary Dolars`);
-      currentUser.Balance =
-        currentUser.Balance + parseFloat(inputRef.current.value);
-      saveTransactionResultIdbAsync(currentUser.CardNumber, { ...currentUser });
-      completeTransaction(true);
-    }
+  const { userContext } = useCurrentUser();
+  const currentUser = userContext;
+
+  const handleDeposit = async () => {
+    if (!currentUser.cardNumber) return;
+    if (!currentUser.balance) return;
+    if (!input) return;
+
+    currentUser.balance = currentUser.balance + parseFloat(input);
+    props.setCurrentUser({ type: ActionType.DEPOSIT, payload: { ...currentUser } });
+
+    await saveTransactionResultsAsync(
+      currentUser.cardNumber,
+      { ...currentUser },
+      {
+        transactionType: TransactionType.DEPOSIT,
+        amount: parseFloat(input),
+        date: dateToday.toLocaleDateString(),
+        time: timeNow,
+      }
+    );
+    toast.show({
+      title: ToastType.SUCCESS,
+      content: `Deposited ${input} Imaginary Dolars`,
+      duration: 3000,
+    });
+    completeTransaction(true);
   };
 
   return (
     <>
-      {!isDeposited && (
+      {!isComplete && (
         <>
           <MainMenuHeader currentUser={currentUser} />
           <input
             type="number"
-            name="depositAmount"
-            ref={inputRef}
+            value={input}
             min={0}
             placeholder="Enter Amount..."
+            onChange={(e) => setInput(e.target.value)}
           />
-          <button onClick={handleDeposit}>DEPOSIT</button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleDeposit();
+            }}
+          >
+            DEPOSIT
+          </button>
         </>
       )}
 
-      {isDeposited && (
+      {isComplete && (
         <Receipt
-          type="Deposit"
-          success={inputRef.current.value ? "true" : "false"}
-          amount={parseFloat(inputRef.current.value)}
+          type={TransactionType.DEPOSIT}
+          isSuccessful={isComplete ? true : false}
+          amount={parseFloat(input)}
           currentUser={currentUser}
         />
       )}
