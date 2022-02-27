@@ -1,25 +1,16 @@
-import { Action, ActionType, useCurrentUser } from "../../data/currentUser";
+import { ActionType, useCurrentUser } from "../../data/currentUser";
 import { useState } from "react";
-import Receipt, {
-  dateToday,
-  timeNow,
-  TransactionType,
-} from "../../components/PrintedReceipt";
-import MainMenuHeader from "../../components/MainMenuHeader";
+import { TransactionType } from "../../components/PrintedReceipt";
 import { hasEnoughMoney } from "../../validation/validateAmount";
 import { Link } from "react-router-dom";
 import { toast, ToastType } from "../../helpers/ToastManager";
-import { saveTransactionResultsAsync } from "../../data/transactions";
+import { saveUserTransactionAsync } from "../../data/userData";
+import WithdrawForm from "../../components/WithdrawForm";
 
-interface WithdrawPageProps {
-  setCurrentUser: (arg0: Action) => void
-}
-
-const WithdrawPage: React.FC<WithdrawPageProps> = (props) => {
-  const [isComplete, completeTransaction] = useState(false);
+const WithdrawPage: React.FC = () => {
   const [input, setInput] = useState("");
 
-  const { userContext } = useCurrentUser();
+  const { dispatch, userContext } = useCurrentUser();
   const currentUser = userContext;
 
   const handleWithdraw = async () => {
@@ -29,64 +20,38 @@ const WithdrawPage: React.FC<WithdrawPageProps> = (props) => {
 
     if (hasEnoughMoney(currentUser.balance, parseFloat(input))) {
       currentUser.balance = currentUser.balance - parseFloat(input);
-      props.setCurrentUser({ type: ActionType.WITHDRAW, payload: { ...currentUser } });
-      
-      await saveTransactionResultsAsync(
-        currentUser.cardNumber,
-        { ...currentUser },
-        {
-          transactionType: TransactionType.WITHDRAW,
-          amount: parseFloat(input),
-          date: dateToday.toLocaleDateString(),
-          time: timeNow,
-        }
-      );
+
+      dispatch({ type: ActionType.WITHDRAW, payload: { ...currentUser } });
+
+      await saveUserTransactionAsync(currentUser.cardNumber, {
+        transactionType: TransactionType.WITHDRAW,
+        amount: parseFloat(input),
+        date: new Date().toLocaleDateString(),
+        time: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+        balance: currentUser.balance,
+      });
+
       toast.show({
         title: ToastType.SUCCESS,
         content: `Withdrawn ${input} Imaginary Dolars`,
         duration: 3000,
       });
-      completeTransaction(true);
     } else {
       toast.show({
         title: ToastType.ERROR,
-        content: `Cannot Withdraw More Cash than Available. Current Status is ${currentUser.balance}.00`,
-        duration: 9000,
+        content: `Cannot Withdraw More Cash than Available. Current Status is ${currentUser.balance}`,
+        duration: 5000,
       });
     }
   };
 
   return (
     <>
-      {!isComplete && (
-        <>
-          <MainMenuHeader currentUser={currentUser} />
-          <input
-            type="number"
-            value={input}
-            min={0}
-            placeholder="Enter Amount..."
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              handleWithdraw();
-            }}
-          >
-            WITHDRAW
-          </button>
-        </>
-      )}
-
-      {isComplete && (
-        <Receipt
-          type={TransactionType.WITHDRAW}
-          isSuccessful={isComplete ? true : false}
-          amount={parseFloat(input)}
-          currentUser={currentUser}
-        />
-      )}
+      <WithdrawForm
+        input={input}
+        setInput={setInput}
+        handleWithdraw={handleWithdraw}
+      />
 
       <div>
         <Link to="/MainMenu">

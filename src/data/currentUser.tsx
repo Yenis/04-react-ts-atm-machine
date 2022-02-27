@@ -15,10 +15,10 @@ export const emptyUser: User = {
 };
 
 export enum ActionType {
-  SET = "SET",
-  DEPOSIT = "DEPOSIT",
-  WITHDRAW = "WITHDRAW",
-  EMPTY = "EMPTY",
+  SET,
+  DEPOSIT,
+  WITHDRAW,
+  EMPTY,
 }
 
 export interface Action {
@@ -60,5 +60,13 @@ export const useCurrentUser = () => {
   });
   const userContext = useContext(CurrentUserContext);
 
-  return { currentUser, dispatch, userContext } as const;
+  const UserContextProvider = ({ children }: any) => {
+    return (
+      <CurrentUserContext.Provider value={currentUser}>
+        {children}
+      </CurrentUserContext.Provider>
+    );
+  };
+
+  return { currentUser, dispatch, userContext, UserContextProvider } as const;
 };

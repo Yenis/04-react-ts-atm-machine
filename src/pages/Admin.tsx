@@ -1,12 +1,6 @@
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
-import { loadUserDataFromDbAsync } from "../data/allAccountIDs";
 
 const AdminMenu: React.FC = () => {
-  useEffect(() => {
-    loadUserDataFromDbAsync();
-  }, []);
-
   return (
     <>
       <div>
@@ -23,9 +17,9 @@ const AdminMenu: React.FC = () => {
         </Link>
       </div>
       <div>
-      <Link to="/">
-        <button>RETURN</button>
-      </Link>
+        <Link to="/">
+          <button>RETURN</button>
+        </Link>
       </div>
     </>
   );

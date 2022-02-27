@@ -1,9 +1,9 @@
 export const isNotRegistered = (cardNumber: string) => {
-    return true;
-}
+  return true;
+};
 
 export const isPinCorrect = (pinNumber: string) => {
-    return true;
-}
+  return true;
+};
 
 let needsImplementation;

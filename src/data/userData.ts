@@ -1,45 +1,94 @@
-import { openDB } from 'idb';
-import { User } from './currentUser';
+import { openDB } from "idb";
+import { toast, ToastType } from "../helpers/ToastManager";
+import { User } from "./currentUser";
 
-const accessIdbAsync = openDB('atm-store', 1, {
+const openAtmUsersStore = openDB("atm-users", 1, {
   upgrade(db) {
-    db.createObjectStore('atm-users');
-    db.createObjectStore('atm-user-transactions');
-    db.createObjectStore('atm-user-balance');
+    db.createObjectStore("atm-users-store");
   },
 });
 
-export async function getUserInfoAsync(card: IDBKeyRange | IDBValidKey) {
-  const userInfo = await (await accessIdbAsync).get('atm-users', card); 
-  const userBalance = await (await accessIdbAsync).get('atm-user-balance', card); 
+const openTransactionsStore = openDB("atm-user-transactions", 1, {
+  upgrade(db) {
+    db.createObjectStore("atm-transactions-store");
+  },
+});
 
-  const user: User = {
+export const getSingleUserFullInfoAsync = async (
+  cardNumber: IDBKeyRange | IDBValidKey
+) => {
+  const userInfo = await getUserInfoAsync(cardNumber);
+  const userTransactions = await getUserTransactionsAsync(cardNumber);
+
+  const userData: User = {
     userName: userInfo.userName,
     cardNumber: userInfo.cardNumber,
     pin: userInfo.pin,
-    balance: userBalance.balance
-  }
+    balance: userTransactions.balance,
+  };
+
+  return userData;
+};
+
+export const saveTransactionResultsAsync = async (
+  cardNumber: IDBKeyRange | IDBValidKey,
+  userData: User,
+  transactionInfo?: any
+) => {
+  const transactionData = await getUserTransactionsAsync(cardNumber) || [];
+  transactionData.push(transactionInfo);
+
+  await saveUserInfoAsync(cardNumber, {
+    userName: userData.userName,
+    cardNumber: userData.cardNumber,
+    pin: userData.pin,
+  });
   
-  return user;
+  await saveUserTransactionAsync(cardNumber, {
+    transactionInfo: transactionData,
+    balance: userData.balance,
+  });
+
+  toast.show({
+    title: ToastType.SUCCESS,
+    content: "Transaction Completed",
+    duration: 5000,
+  });
 };
 
-export async function getUserTransactionsAsync(card: IDBKeyRange | IDBValidKey) {
-  return (await accessIdbAsync).get('atm-user-transactions', card);
-};
-export async function getUserBalanceAsync(card: IDBKeyRange | IDBValidKey) {
-  return (await accessIdbAsync).get('atm-user-balance', card);
-};
-
-export async function saveUserInfoAsync(card: IDBKeyRange | IDBValidKey | undefined, data: any) {
-  return (await accessIdbAsync).put('atm-users', data, card);
-};
-export async function saveUserTransactionAsync(card: IDBKeyRange | IDBValidKey | undefined, data: any) {
-  return (await accessIdbAsync).put('atm-user-transactions', data, card);
-};
-export async function setUserBalanceAsync(card: IDBKeyRange | IDBValidKey | undefined, data: any) {
-  return (await accessIdbAsync).put('atm-user-balance', data, card);
+export const getUserInfoAsync = async (
+  cardNumber: IDBKeyRange | IDBValidKey
+) => {
+  return (await openAtmUsersStore).get("atm-users-store", cardNumber);
 };
 
-export async function getAllUsersInfoAsync() {
-  return (await accessIdbAsync).getAllKeys('atm-users');
+export const getUserTransactionsAsync = async (
+  cardNumber: IDBKeyRange | IDBValidKey
+) => {
+  return (await openTransactionsStore).get(
+    "atm-transactions-store",
+    cardNumber
+  );
+};
+
+export const saveUserInfoAsync = async (
+  card: IDBKeyRange | IDBValidKey | undefined,
+  data: any
+) => {
+  return (await openAtmUsersStore).put("atm-users-store", data, card);
+};
+
+export const saveUserTransactionAsync = async (
+  card: IDBKeyRange | IDBValidKey | undefined,
+  data: any
+) => {
+  return (await openTransactionsStore).put(
+    "atm-transactions-store",
+    data,
+    card
+  );
+};
+
+export const getAllUsersCardNumbersAsync = async () => {
+  return (await openAtmUsersStore).getAllKeys("atm-users-store");
 };

@@ -1,3 +1,6 @@
-export const hasEnoughMoney = (current: number, request: number) => {
-    return current >= request
-  }
+export const hasEnoughMoney = (
+  availableAmount: number,
+  requestedAmount: number
+) => {
+  return availableAmount >= requestedAmount;
+};

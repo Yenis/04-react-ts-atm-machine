@@ -1,14 +1,13 @@
-import { User } from "../data/currentUser";
+import { useCurrentUser } from "../data/currentUser";
 
-interface HeaderProps {
-  currentUser: User
-}
-
-const MainMenuHeader: React.FC<HeaderProps> = (props) => {
+const MainMenuHeader: React.FC = () => {
+  const { userContext } = useCurrentUser()
+  const currentUser = userContext;
+  
   return (
     <>
-      <h1>Welcome! {props.currentUser.userName}</h1>
-      <h2>Card: {props.currentUser.cardNumber}</h2>
+      <h1>Welcome! {currentUser.userName}</h1>
+      <h2>Card: {currentUser.cardNumber}</h2>
     </>
   );
 };

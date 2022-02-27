@@ -1,25 +1,32 @@
 import { Link } from "react-router-dom";
-import { useCurrentUser} from "../data/currentUser";
-import { MouseEventHandler } from "react";
+import { ActionType, emptyUser, useCurrentUser } from "../data/currentUser";
+
 import MainMenuButtons from "../components/MainMenuButtons";
 import MainMenuHeader from "../components/MainMenuHeader";
+import { toast, ToastType } from "../helpers/ToastManager";
 
-interface MainMenuProps {
-  handleLogOutUser: MouseEventHandler<HTMLButtonElement> | undefined
-}
-
-const MainMenuPage: React.FC<MainMenuProps> = (props) => {
-  const { userContext } = useCurrentUser()
+const MainMenuPage: React.FC = () => {
+  const { dispatch, userContext } = useCurrentUser();
   const currentUser = userContext;
-  
+
+  const handleLogOutUser = () => {
+    dispatch({ type: ActionType.EMPTY, payload: emptyUser });
+    toast.show({
+      title: ToastType.SUCCESS,
+      content: `User: ${currentUser.userName} has Logged Out`,
+      duration: 5000,
+    });
+  };
+
   return (
     <div>
-        <MainMenuHeader currentUser={currentUser}/>
-        <MainMenuButtons />
-        <br />
+      <MainMenuHeader />
+      <MainMenuButtons />
+      <div>
         <Link to="/">
-        <button onClick={props.handleLogOutUser}>LOGOUT</button>
-      </Link>
+          <button onClick={handleLogOutUser}>LOGOUT</button>
+        </Link>
+      </div>
     </div>
   );
 };

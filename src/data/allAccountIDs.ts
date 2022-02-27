@@ -1,17 +1,31 @@
 import { User } from "./currentUser";
-import { getAllUsersInfoAsync, getUserInfoAsync } from "./userData";
+import {
+  getAllUsersCardNumbersAsync,
+  getSingleUserFullInfoAsync,
+} from "./userData";
 
-export const allAccounts: User[] = [];
+class UserStore {
+  userData: User[] = [];
 
-export async function loadUserDataFromDbAsync() {
-  const users = await getAllUsersInfoAsync();
-  users.forEach(async (cardNumber) => {
-    let account = await getUser(cardNumber)
-      allAccounts.push(account);
-  });
+  // constructor() {
+  //   this.loadUserDataFromDbAsync();
+  // }
+
+  async loadUserDataFromDbAsync() {
+    const users = await getAllUsersCardNumbersAsync();
+
+    await Promise.all(
+      users.map(async (cardNumber) => {
+        let account = await this.getSingleUserData(cardNumber);
+        this.userData.push(account);
+      })
+    );
+  }
+
+  async getSingleUserData(key: IDBValidKey | IDBKeyRange) {
+    let data = await getSingleUserFullInfoAsync(key);
+    return data;
+  }
 }
 
-async function getUser(key: IDBValidKey | IDBKeyRange) {
-  let data = await getUserInfoAsync(key);
-  return data;
-}
+export const userStore = new UserStore();
