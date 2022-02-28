@@ -44,7 +44,7 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
     toast.show({
       title: ToastType.SUCCESS,
       content: `Login User: ${userData.userName}!`,
-      duration: 3000,
+      duration: 5000,
     });
 
     navigateTo("/MainMenu");

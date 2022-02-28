@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useCurrentUser } from "../data/currentUser";
 import React, { useEffect, useState } from "react";
 
-export const TopLayout: React.FC = () => {
+export const TopLayout: React.FC = ({ children }: any) => {
   const { userContext } = useCurrentUser();
   const currentUser = userContext;
 
@@ -16,13 +16,16 @@ export const TopLayout: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Welcome to ATM</h2>
-      <h3>
-        Current User: {currentUser.userName ? currentUser.userName : "N/A"}
-      </h3>
-      <h3>{time}</h3>
-    </div>
+    <>
+      <div>
+        <h2>Welcome to ATM</h2>
+        <h3>
+          Current User: {currentUser.userName ? currentUser.userName : "N/A"}
+        </h3>
+        <h3>{time}</h3>
+      </div>
+      <div>{children}</div>
+    </>
   );
 };
 
