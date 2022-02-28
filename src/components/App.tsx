@@ -10,14 +10,24 @@ import DepositPage from "../pages/MainMenu/Deposit";
 import WithdrawPage from "../pages/MainMenu/Withdraw";
 import AdminMenu from "../pages/Admin";
 import AdminServicePage from "../pages/Service";
-import { useCurrentUser } from "../data/currentUser";
+import { ActionType, emptyUser, useCurrentUser } from "../data/currentUser";
+import { toast, ToastType } from "../helpers/ToastManager";
 
 const App: React.FC = () => {
-  const { dispatch, UserContextProvider } = useCurrentUser();
+  const { currentUser, dispatch, UserContextProvider } = useCurrentUser();
 
   useEffect(() => {
     userStore.loadUserDataFromDbAsync();
   }, []);
+
+  const handleLogOutUser = () => {
+    dispatch({ type: ActionType.EMPTY, payload: emptyUser });
+    toast.show({
+      title: ToastType.SUCCESS,
+      content: `User: ${currentUser.userName} has Logged Out`,
+      duration: 5000,
+    });
+  };
 
   return (
     <UserContextProvider>
@@ -28,7 +38,10 @@ const App: React.FC = () => {
             path="LoginPage"
             element={<LoginPage dispatch={dispatch} />}
           ></Route>
-          <Route path="MainMenu" element={<MainMenuPage />}></Route>
+          <Route
+            path="MainMenu"
+            element={<MainMenuPage handleLogOutUser={handleLogOutUser} />}
+          ></Route>
           <Route path="MainMenu/StatusPage" element={<StatusPage />}></Route>
           <Route path="MainMenu/DepositPage" element={<DepositPage />}></Route>
           <Route

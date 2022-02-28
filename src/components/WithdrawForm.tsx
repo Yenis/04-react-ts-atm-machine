@@ -1,4 +1,3 @@
-import { useState } from "react";
 import MainMenuHeader from "./MainMenuHeader";
 import Receipt, { TransactionType } from "./PrintedReceipt";
 
@@ -6,14 +5,15 @@ interface WithdrawFormProps {
   input: string | number | readonly string[] | undefined;
   setInput: (arg0: string) => void;
   handleWithdraw: () => void;
+  isComplete: boolean,
+  completeTransaction: (arg0: boolean) => void
 }
 
 const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
-  const [isComplete, completeTransaction] = useState(false);
 
   return (
     <>
-      {!isComplete && (
+      {!props.isComplete && (
         <>
           <MainMenuHeader />
           <input
@@ -27,7 +27,6 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             onClick={(e) => {
               e.preventDefault();
               props.handleWithdraw();
-              completeTransaction(true);
             }}
           >
             WITHDRAW
@@ -35,10 +34,10 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         </>
       )}
 
-      {isComplete && (
+      {props.isComplete && (
         <Receipt
           type={TransactionType.WITHDRAW}
-          isSuccessful={isComplete ? true : false}
+          isSuccessful={props.isComplete ? true : false}
           amount={typeof props.input === "string" ? parseFloat(props.input) : 0}
         />
       )}

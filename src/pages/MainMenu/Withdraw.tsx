@@ -9,6 +9,7 @@ import WithdrawForm from "../../components/WithdrawForm";
 
 const WithdrawPage: React.FC = () => {
   const [input, setInput] = useState("");
+  const [isComplete, completeTransaction] = useState(false);
 
   const { dispatch, userContext } = useCurrentUser();
   const currentUser = userContext;
@@ -36,6 +37,8 @@ const WithdrawPage: React.FC = () => {
         content: `Withdrawn ${input} Imaginary Dolars`,
         duration: 3000,
       });
+      completeTransaction(true);
+      
     } else {
       toast.show({
         title: ToastType.ERROR,
@@ -51,6 +54,8 @@ const WithdrawPage: React.FC = () => {
         input={input}
         setInput={setInput}
         handleWithdraw={handleWithdraw}
+        isComplete={isComplete}
+        completeTransaction={completeTransaction}
       />
 
       <div>

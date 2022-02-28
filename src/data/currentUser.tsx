@@ -27,6 +27,9 @@ export interface Action {
 }
 
 function transactionReducer(state: User, action: Action) {
+  console.log("State:", state)
+  console.log("Action:", action)
+  
   if (!state.balance) state.balance = 0;
 
   const { type, payload } = action;

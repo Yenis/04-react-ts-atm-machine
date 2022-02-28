@@ -12,6 +12,7 @@ interface LoginPageProps {
   dispatch: (arg0: Action) => void;
 }
 
+
 const LoginPage: React.FC<LoginPageProps> = (props) => {
   const [cardInput, setCardInput] = useState("");
   const [pinInput, setPinInput] = useState("");
