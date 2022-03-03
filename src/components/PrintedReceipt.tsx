@@ -1,4 +1,4 @@
-import { useCurrentUser } from "../data/currentUser";
+import { useTransaction } from "../helpers/transactionsHook";
 
 export enum TransactionType {
   WITHDRAW = "WITHDRAW",
@@ -12,8 +12,7 @@ interface ReceiptProps {
 }
 
 const Receipt: React.FC<ReceiptProps> = (props) => {
-  const { userContext } = useCurrentUser();
-  const currentUser = userContext;
+  const { userTransactions } = useTransaction();
 
   return (
     <div>
@@ -30,19 +29,19 @@ const Receipt: React.FC<ReceiptProps> = (props) => {
 
       {props.amount && <h3>Amount: {props.amount}</h3>}
 
-      {props.amount &&
-        props.type === TransactionType.DEPOSIT &&
-        typeof currentUser.balance !== "undefined" && (
-          <h3>Previous balance: {currentUser.balance - props.amount}</h3>
+      {props.type === TransactionType.DEPOSIT &&
+        typeof props.amount !== "undefined" &&
+        typeof userTransactions.balance !== "undefined" && (
+          <h3>Previous balance: {userTransactions.balance - props.amount}</h3>
         )}
 
-      {props.amount &&
-        props.type === TransactionType.WITHDRAW &&
-        typeof currentUser.balance !== "undefined" && (
-          <h3>Previous balance: {currentUser.balance + props.amount}</h3>
+      {props.type === TransactionType.WITHDRAW &&
+        typeof props.amount !== "undefined" &&
+        typeof userTransactions.balance !== "undefined" && (
+          <h3>Previous balance: {userTransactions.balance + props.amount}</h3>
         )}
 
-      <h3>Current balance: {currentUser.balance}</h3>
+      <h3>Current balance: {userTransactions.balance}</h3>
     </div>
   );
 };

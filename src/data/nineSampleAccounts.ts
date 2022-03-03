@@ -1,58 +1,175 @@
-import { User } from "./currentUser";
+import { User } from "../helpers/currentUserHook";
+import { UserBalance } from "../helpers/transactionsHook";
+import { UserPin } from "../helpers/userPinHook";
+
+interface UserTransaction extends UserBalance {
+  transactionType: string,
+  amount: number,
+  date: string,
+  time: string,
+}
+
+const dateToday = new Date().toLocaleDateString();
+const timeNow = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`;
 
 export const sampleAccounts: User[] = [
-    {
-        cardNumber: "1111111111111111",
-        userName: "Sample User 1",
-        pin: "11111",
-        balance: 0
-    },
-    {
-        cardNumber: "2222222222222222",
-        userName: "Sample User 2",
-        pin: "22222",
-        balance: 1000
-    },
-    {
-        cardNumber: "3333333333333333",
-        userName: "Sample User 3",
-        pin: "33333",
-        balance: 5000
-    },
-    {
-        cardNumber: "4444444444444444",
-        userName: "Sample User 4",
-        pin: "44444",
-        balance: 12345
-    },
-    {
-        cardNumber: "5555555555555555",
-        userName: "Sample User 5",
-        pin: "55555",
-        balance: 55555
-    },
-    {
-        cardNumber: "6666666666666666",
-        userName: "Sample User 6",
-        pin: "66666",
-        balance: 66666
-    },
-    {
-        cardNumber: "7777777777777777",
-        userName: "Sample User 7",
-        pin: "77777",
-        balance: 70000
-    },
-    {
-        cardNumber: "8888888888888888",
-        userName: "Sample User 8",
-        pin: "88888",
-        balance: 100000
-    },
-    {
-        cardNumber: "9999999999999999",
-        userName: "Sample User 9",
-        pin: "99999",
-        balance: 15000000
-    },
-]
+  {
+    cardNumber: "1111111111111111",
+    userName: "Sample User 1",
+  },
+  {
+    cardNumber: "2222222222222222",
+    userName: "Sample User 2",
+  },
+  {
+    cardNumber: "3333333333333333",
+    userName: "Sample User 3",
+  },
+  {
+    cardNumber: "4444444444444444",
+    userName: "Sample User 4",
+  },
+  {
+    cardNumber: "5555555555555555",
+    userName: "Sample User 5",
+  },
+  {
+    cardNumber: "6666666666666666",
+    userName: "Sample User 6",
+  },
+  {
+    cardNumber: "7777777777777777",
+    userName: "Sample User 7",
+  },
+  {
+    cardNumber: "8888888888888888",
+    userName: "Sample User 8",
+  },
+  {
+    cardNumber: "9999999999999999",
+    userName: "Sample User 9",
+  },
+];
+
+export const sampleAccountPins: UserPin[] = [
+  {
+    cardNumber: "1111111111111111",
+    pin: "11111",
+    pinAttempts: 1,
+  },
+  {
+    cardNumber: "2222222222222222",
+    pin: "22222",
+    pinAttempts: 2,
+  },
+  {
+    cardNumber: "3333333333333333",
+    pin: "33333",
+    pinAttempts: 3,
+  },
+  {
+    cardNumber: "4444444444444444",
+    pin: "44444",
+    pinAttempts: 4,
+  },
+  {
+    cardNumber: "5555555555555555",
+    pin: "55555",
+    pinAttempts: 5,
+  },
+  {
+    cardNumber: "6666666666666666",
+    pin: "66666",
+    pinAttempts: 6,
+  },
+  {
+    cardNumber: "7777777777777777",
+    pin: "77777",
+    pinAttempts: 7,
+  },
+  {
+    cardNumber: "8888888888888888",
+    pin: "88888",
+    pinAttempts: 8,
+  },
+  {
+    cardNumber: "9999999999999999",
+    pin: "99999",
+    pinAttempts: 9,
+  },
+];
+
+export const sampleTransactions: UserTransaction[] = [
+  {
+    cardNumber: "1111111111111111",
+    transactionType: "TEST",
+    amount: 0,
+    date: dateToday,
+    time: timeNow,
+    balance: 0,
+  },
+  {
+    cardNumber: "2222222222222222",
+    transactionType: "TEST",
+    amount: 0,
+    date: dateToday,
+    time: timeNow,
+    balance: 1000,
+  },
+  {
+    cardNumber: "3333333333333333",
+    transactionType: "TEST",
+    amount: 0,
+    date: dateToday,
+    time: timeNow,
+    balance: 5000,
+  },
+  {
+    cardNumber: "4444444444444444",
+    transactionType: "TEST",
+    amount: 0,
+    date: dateToday,
+    time: timeNow,
+    balance: 12345,
+  },
+  {
+    cardNumber: "5555555555555555",
+    transactionType: "TEST",
+    amount: 0,
+    date: dateToday,
+    time: timeNow,
+    balance: 55555,
+  },
+  {
+    cardNumber: "6666666666666666",
+    transactionType: "TEST",
+    amount: 0,
+    date: dateToday,
+    time: timeNow,
+    balance: 66666,
+  },
+  {
+    cardNumber: "7777777777777777",
+    transactionType: "TEST",
+    amount: 0,
+    date: dateToday,
+    time: timeNow,
+    balance: 70000,
+  },
+  {
+    cardNumber: "8888888888888888",
+    transactionType: "TEST",
+    amount: 0,
+    date: dateToday,
+    time: timeNow,
+    balance: 100000,
+  },
+  {
+    cardNumber: "9999999999999999",
+    transactionType: "TEST",
+    amount: 0,
+    date: dateToday,
+    time: timeNow,
+    balance: 15000000,
+  },
+];

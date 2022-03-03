@@ -1,4 +1,4 @@
-export const hasEnoughMoney = (
+export const isTransactionValid = (
   availableAmount: number,
   requestedAmount: number
 ) => {

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useCurrentUser } from "../data/currentUser";
+import { useCurrentUser } from "../helpers/currentUserHook";
 import React, { useEffect, useState } from "react";
 
 export const TopLayout: React.FC = ({ children }: any) => {
@@ -16,7 +16,7 @@ export const TopLayout: React.FC = ({ children }: any) => {
   }, []);
 
   return (
-    <>
+    <div>
       <div>
         <h2>Welcome to ATM</h2>
         <h3>
@@ -25,7 +25,7 @@ export const TopLayout: React.FC = ({ children }: any) => {
         <h3>{time}</h3>
       </div>
       <div>{children}</div>
-    </>
+    </div>
   );
 };
 

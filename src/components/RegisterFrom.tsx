@@ -1,16 +1,14 @@
-
 interface RegisterFormProps {
-  userName: string | number | readonly string[] | undefined,
-  setUserName: (arg0: string) => void,
-  cardInput: string | number | readonly string[] | undefined,
-  setCardInput: (arg0: string) => void,
-  pinInput: string | number | readonly string[] | undefined,
-  setPinInput: (arg0: string) => void,
+  userName: string | number | readonly string[] | undefined;
+  setUserName: (arg0: string) => void;
+  cardInput: string | number | readonly string[] | undefined;
+  setCardInput: (arg0: string) => void;
+  pinInput: string | number | readonly string[] | undefined;
+  setPinInput: (arg0: string) => void;
   handleRegisterUser: (arg0: string, arg1: string, arg2: string) => void;
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = (props) => {
-
   return (
     <form action="submit">
       <input

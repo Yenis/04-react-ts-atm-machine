@@ -1,17 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Action, ActionType } from "../data/currentUser";
 import { toast, ToastType } from "../helpers/ToastManager";
+import { LogRegProps } from "./Login";
 
 import RegisterForm from "../components/RegisterFrom";
-import { isCardValid } from "../validation/validateCard";
+import { isAlreadyRegistered, isCardValid } from "../validation/validateCard";
 import { isPinValid } from "../validation/validatePIN";
 import { useState } from "react";
+import { User } from "../helpers/currentUserHook";
+import { UserPin } from "../helpers/userPinHook";
+import {
+  saveUserInfoAsync,
+  saveUserPinStateAsync,
+  saveUserTransactionAsync,
+} from "../data/userData";
 
-interface RegisterPageProps {
-  dispatch: (arg0: Action) => void;
-}
-
-const RegisterPage: React.FC<RegisterPageProps> = (props) => {
+const RegisterPage: React.FC<LogRegProps> = (props) => {
   const [userName, setUserName] = useState("");
   const [cardInput, setCardInput] = useState("");
   const [pinInput, setPinInput] = useState("");
@@ -20,49 +23,42 @@ const RegisterPage: React.FC<RegisterPageProps> = (props) => {
 
   const handleRegisterUser = async (
     userName?: string,
-    cardNumber?: string,
-    pin?: string
+    cardInput?: string,
+    pinInput?: string
   ) => {
-    if (!userName) {
-      toast.show({
-        title: ToastType.ERROR,
-        content: "User Name not provided, fall back to defaultUser",
-        duration: 3000,
-      });
-      userName = "defaultUser";
-    }
-    if (!cardNumber || !isCardValid(cardNumber)) {
-      toast.show({
-        title: ToastType.ERROR,
-        content: "Card Number is not Valid",
-        duration: 3000,
-      });
-      return;
-    }
-    if (!pin || !isPinValid(pin)) {
-      toast.show({
-        title: ToastType.ERROR,
-        content: "Pin Number is not Valid",
-        duration: 3000,
-      });
-      return;
-    }
+    if (!userName) userName = "default";
+    if (!cardInput || !isCardValid(cardInput)) return;
+    if (!pinInput || !isPinValid(pinInput)) return;
+    if (isAlreadyRegistered(cardInput)) return;
 
-    let userData = {
+    let userInfo: User = {
       userName: userName,
-      cardNumber: cardNumber,
-      pin: pin,
+      cardNumber: cardInput,
+    };
+    let userPinState: UserPin = {
+      cardNumber: cardInput,
+      pin: pinInput,
+      pinAttempts: 3,
+    };
+    let userInitTransactionData = {
+      cardNumber: cardInput,
+      transactionType: "INITIAL",
+      amount: 0,
+      date: new Date().toLocaleDateString(),
+      time: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
       balance: 0,
     };
 
-    props.dispatch({ type: ActionType.SET, payload: userData });
+    await saveUserInfoAsync(cardInput, userInfo);
+    await saveUserPinStateAsync(cardInput, userPinState);
+    await saveUserTransactionAsync(cardInput, userInitTransactionData);
 
+    props.setCurrentUser(userInfo);
     toast.show({
       title: ToastType.SUCCESS,
-      content: `Register User: ${userData.userName}, Card Number: ${userData.cardNumber}!`,
+      content: `Register User: ${userInfo.userName}, Card Number: ${userInfo.cardNumber}!`,
       duration: 5000,
     });
-
     navigateTo("/MainMenu");
   };
 

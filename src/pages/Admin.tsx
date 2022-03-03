@@ -1,6 +1,12 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { transactionStore } from "../data/transactionStore";
 
 const AdminMenu: React.FC = () => {
+  useEffect(()=>{
+    transactionStore.assignTotalCashAmountAsync()
+  })
+
   return (
     <>
       <div>

@@ -1,5 +1,5 @@
-import Receipt from "../../components/PrintedReceipt";
 import { Link } from "react-router-dom";
+import Receipt from "../../components/PrintedReceipt";
 import MainMenuHeader from "../../components/MainMenuHeader";
 
 const StatusPage: React.FC = () => {

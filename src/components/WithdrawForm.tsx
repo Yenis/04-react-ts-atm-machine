@@ -10,7 +10,6 @@ interface WithdrawFormProps {
 }
 
 const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
-
   return (
     <>
       {!props.isComplete && (

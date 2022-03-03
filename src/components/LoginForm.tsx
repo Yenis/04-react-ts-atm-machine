@@ -1,4 +1,4 @@
-import { userStore } from "../data/allAccountIDs";
+import { userStore } from "../data/userStore";
 
 interface LoginFormProps {
   cardInput: string | number | readonly string[] | undefined;
@@ -24,7 +24,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
       />
 
       <select onChange={(e) => handleAccountSelect(e.target.value)}>
-        {userStore.userData.map((user) => {
+        {userStore.usersData.map((user) => {
           return <option key={user.cardNumber}>{user.cardNumber}</option>;
         })}
       </select>

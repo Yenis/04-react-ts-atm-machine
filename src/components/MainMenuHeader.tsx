@@ -1,4 +1,4 @@
-import { useCurrentUser } from "../data/currentUser";
+import { useCurrentUser } from "../helpers/currentUserHook";
 
 const MainMenuHeader: React.FC = () => {
   const { userContext } = useCurrentUser()

@@ -1,53 +1,59 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Action, ActionType } from "../data/currentUser";
+import { toast, ToastType } from "../helpers/ToastManager";
 
 import LoginForm from "../components/LoginForm";
 import { isCardValid } from "../validation/validateCard";
 import { isPinValid } from "../validation/validatePIN";
-import { assignUserAccount } from "../helpers/assignUserAccount";
-import { toast, ToastType } from "../helpers/ToastManager";
 import { useState } from "react";
+import { User } from "../helpers/currentUserHook";
+import { UserPin } from "../helpers/userPinHook";
+import { saveUserPinStateAsync } from "../data/userData";
+import {
+  assignUserAccount,
+  assignUserPinState,
+} from "../helpers/assignUserAccount";
 
-interface LoginPageProps {
-  dispatch: (arg0: Action) => void;
+export interface LogRegProps {
+  setCurrentUser: (arg0: User) => void;
+  setPinState: (arg0: UserPin) => void
 }
 
-
-const LoginPage: React.FC<LoginPageProps> = (props) => {
+const LoginPage: React.FC<LogRegProps> = (props) => {
   const [cardInput, setCardInput] = useState("");
   const [pinInput, setPinInput] = useState("");
 
   const navigateTo = useNavigate();
 
-  const handleLoginUser = async (cardNumber?: string, pin?: string) => {
-    if (!cardNumber || !isCardValid(cardNumber)) {
+  const handleLoginUser = async (cardInput?: string, pinInput?: string) => {
+    if (!cardInput || !isCardValid(cardInput)) return;
+    if (!pinInput || !isPinValid(pinInput)) return;
+
+    let userInfo = await assignUserAccount(cardInput);
+    let pinState = await assignUserPinState(cardInput);
+
+    if (pinState.pin !== pinInput) {
       toast.show({
         title: ToastType.ERROR,
-        content: "Card Number is not Valid",
-        duration: 3000,
+        content: "Provided PIN is wrong!",
+        duration: 9000,
+      });
+      await saveUserPinStateAsync(cardInput, {
+        ...pinState,
+        pinAttempts: pinState.pinAttempts - 1,
+      });
+      props.setPinState({
+        ...pinState,
+        pinAttempts: pinState.pinAttempts - 1,
       });
       return;
     }
 
-    if (!pin || !isPinValid(pin)) {
-      toast.show({
-        title: ToastType.ERROR,
-        content: "PIN is not Valid",
-        duration: 3000,
-      });
-      return;
-    }
-
-    let userData = await assignUserAccount(cardNumber);
-
-    props.dispatch({ type: ActionType.SET, payload: userData });
-
+    props.setCurrentUser(userInfo);
     toast.show({
       title: ToastType.SUCCESS,
-      content: `Login User: ${userData.userName}!`,
+      content: `Login User: ${userInfo.userName}!`,
       duration: 5000,
     });
-
     navigateTo("/MainMenu");
   };
 
