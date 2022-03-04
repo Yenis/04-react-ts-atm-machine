@@ -2,7 +2,7 @@ import { User } from "../helpers/currentUserHook";
 import { UserBalance } from "../helpers/transactionsHook";
 import { UserPin } from "../helpers/userPinHook";
 
-interface UserTransaction extends UserBalance {
+export interface UserTransaction extends UserBalance {
   transactionType: string,
   amount: number,
   date: string,

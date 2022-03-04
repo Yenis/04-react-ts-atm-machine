@@ -20,6 +20,7 @@ export class TransactionStore {
     await Promise.all(
       users.map(async (cardNumber) => {
         let account = await getUserTransactionsAsync(cardNumber);
+        if (!account.balance) account.balance = 0;
         this.allUsersTotal += account.balance;
       })
     );

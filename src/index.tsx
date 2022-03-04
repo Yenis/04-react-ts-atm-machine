@@ -59,21 +59,6 @@ import { BrowserRouter as Router } from "react-router-dom";
 import App from "./components/App";
 import "./index.css";
 
-// import { sampleAccountPins, sampleAccounts, sampleTransactions } from './data/nineSampleAccounts'
-// import { saveUserInfoAsync, saveUserPinStateAsync, saveUserTransactionAsync } from './data/userData';
-
-// sampleAccounts.forEach(async account => {
-//   await saveUserInfoAsync(account.cardNumber, account)
-// })
-
-// sampleAccountPins.forEach(async account => {
-//   await saveUserPinStateAsync(account.cardNumber, account)
-// })
-
-// sampleTransactions.forEach(async account => {
-//   await saveUserTransactionAsync(account.cardNumber, account)
-// })
-
 ReactDOM.render(
   <React.StrictMode>
     <Router>
