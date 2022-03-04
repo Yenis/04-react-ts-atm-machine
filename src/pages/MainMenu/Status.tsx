@@ -1,16 +1,16 @@
-import { Link } from "react-router-dom";
+import { Button } from "@material-ui/core";
+import { useNavigate } from "react-router-dom";
 import Receipt from "../../components/PrintedReceipt";
 import MainMenuHeader from "../../components/MainMenuHeader";
 
 const StatusPage: React.FC = () => {
+  const navigateTo = useNavigate();
   return (
-    <>
+    <div>
       <MainMenuHeader />
       <Receipt />
-      <Link to="/MainMenu">
-        <button>RETURN</button>
-      </Link>
-    </>
+      <Button onClick={() => navigateTo("/MainMenu")}>RETURN</Button>
+    </div>
   );
 };
 

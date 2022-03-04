@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { TransactionType } from "../../components/PrintedReceipt";
 import { toast, ToastType } from "../../helpers/ToastManager";
@@ -6,17 +6,27 @@ import { isTransactionValid } from "../../validation/validateAmount";
 import { saveUserTransactionAsync } from "../../data/userData";
 import { ActionType, useTransaction } from "../../helpers/transactionsHook";
 import WithdrawForm from "../../components/WithdrawForm";
+import { Button } from "@material-ui/core";
 
 const WithdrawPage: React.FC = () => {
-  const [input, setInput] = useState("");
   const [isComplete, completeTransaction] = useState(false);
 
   const { userTransactions, dispatch } = useTransaction();
 
-  const handleWithdraw = async () => {
+  const navigateTo = useNavigate();
+
+  const handleWithdraw = async (input: string) => {
     if (typeof userTransactions.balance === "undefined") return;
     if (!userTransactions.cardNumber) return;
     if (!input) return;
+    if (parseFloat(input) < 0) {
+      toast.show({
+        title: ToastType.ERROR,
+        content: `Cannot Withdraw Negative Value!`,
+        duration: 3000,
+      });
+      return;
+    }
 
     if (isTransactionValid(userTransactions.balance, parseFloat(input))) {
       dispatch({
@@ -42,7 +52,6 @@ const WithdrawPage: React.FC = () => {
         duration: 3000,
       });
       completeTransaction(true);
-
     } else {
       toast.show({
         title: ToastType.ERROR,
@@ -55,18 +64,11 @@ const WithdrawPage: React.FC = () => {
   return (
     <>
       <WithdrawForm
-        input={input}
-        setInput={setInput}
-        handleWithdraw={handleWithdraw}
         isComplete={isComplete}
         completeTransaction={completeTransaction}
+        handleWithdraw={handleWithdraw}
       />
-
-      <div>
-        <Link to="/MainMenu">
-          <button>RETURN</button>
-        </Link>
-      </div>
+      <Button onClick={() => navigateTo("/MainMenu")}>RETURN</Button>
     </>
   );
 };

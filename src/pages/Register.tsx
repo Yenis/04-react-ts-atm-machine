@@ -1,13 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastType } from "../helpers/ToastManager";
 import { LogRegProps } from "./Login";
 
 import RegisterForm from "../components/RegisterFrom";
 import { isAlreadyRegistered, isCardValid } from "../validation/validateCard";
 import { isPinValid } from "../validation/validatePIN";
-import { useState } from "react";
-import { User } from "../helpers/currentUserHook";
 import { UserPin } from "../helpers/userPinHook";
+import { User } from "../helpers/currentUserHook";
+import { Button } from "@material-ui/core";
 import {
   saveUserInfoAsync,
   saveUserPinStateAsync,
@@ -15,10 +15,6 @@ import {
 } from "../data/userData";
 
 const RegisterPage: React.FC<LogRegProps> = (props) => {
-  const [userName, setUserName] = useState("");
-  const [cardInput, setCardInput] = useState("");
-  const [pinInput, setPinInput] = useState("");
-
   const navigateTo = useNavigate();
 
   const handleRegisterUser = async (
@@ -65,30 +61,12 @@ const RegisterPage: React.FC<LogRegProps> = (props) => {
   return (
     <>
       <h2>Please Provide your card number and PIN</h2>
-      <RegisterForm
-        userName={userName}
-        setUserName={setUserName}
-        cardInput={cardInput}
-        setCardInput={setCardInput}
-        pinInput={pinInput}
-        setPinInput={setPinInput}
-        handleRegisterUser={handleRegisterUser}
-      />
       <div>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            handleRegisterUser(userName, cardInput, pinInput);
-          }}
-        >
-          REGISTER USER
-        </button>
+        <RegisterForm handleRegisterUser={handleRegisterUser} />
       </div>
-      <div>
-        <Link to="/">
-          <button>RETURN</button>
-        </Link>
-      </div>
+      <Button onClick={() => {navigateTo("/")}}>
+        RETURN
+      </Button>
     </>
   );
 };

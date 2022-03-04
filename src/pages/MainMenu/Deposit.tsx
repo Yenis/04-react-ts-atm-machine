@@ -1,20 +1,29 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { TransactionType } from "../../components/PrintedReceipt";
 import { toast, ToastType } from "../../helpers/ToastManager";
 import { saveUserTransactionAsync } from "../../data/userData";
 import { ActionType, useTransaction } from "../../helpers/transactionsHook";
 import DepositForm from "../../components/DepositForm";
+import { Button } from "@material-ui/core";
 
 const DepositPage: React.FC = () => {
-  const [input, setInput] = useState("");
+
+  const navigateTo = useNavigate();
 
   const { userTransactions, dispatch } = useTransaction();
 
-  const handleDeposit = async () => {
+  const handleDeposit = async (input: string) => {
     if (typeof userTransactions.balance === "undefined") return;
     if (!userTransactions.cardNumber) return;
     if (!input) return;
+    if (parseFloat(input) < 0) {
+      toast.show({
+        title: ToastType.ERROR,
+        content: `Cannot Deposit Negative Value!`,
+        duration: 3000,
+      });
+      return;
+    }
 
     dispatch({
       type: ActionType.DEPOSIT,
@@ -42,16 +51,8 @@ const DepositPage: React.FC = () => {
 
   return (
     <>
-      <DepositForm
-        input={input}
-        setInput={setInput}
-        handleDeposit={handleDeposit}
-      />
-      <div>
-        <Link to="/MainMenu">
-          <button>RETURN</button>
-        </Link>
-      </div>
+      <DepositForm handleDeposit={handleDeposit} />
+      <Button onClick={() => navigateTo("/MainMenu")}>RETURN</Button>
     </>
   );
 };

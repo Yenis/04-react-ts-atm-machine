@@ -1,27 +1,24 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastType } from "../helpers/ToastManager";
 
 import LoginForm from "../components/LoginForm";
 import { isCardValid } from "../validation/validateCard";
 import { isPinValid } from "../validation/validatePIN";
-import { useState } from "react";
-import { User } from "../helpers/currentUserHook";
 import { UserPin } from "../helpers/userPinHook";
-import { saveUserPinStateAsync } from "../data/userData";
+import { User } from "../helpers/currentUserHook";
+import { Button } from "@material-ui/core";
 import {
   assignUserAccount,
   assignUserPinState,
 } from "../helpers/assignUserAccount";
+import { saveUserPinStateAsync } from "../data/userData";
 
 export interface LogRegProps {
   setCurrentUser: (arg0: User) => void;
-  setPinState: (arg0: UserPin) => void
+  setPinState: (arg0: UserPin) => void;
 }
 
 const LoginPage: React.FC<LogRegProps> = (props) => {
-  const [cardInput, setCardInput] = useState("");
-  const [pinInput, setPinInput] = useState("");
-
   const navigateTo = useNavigate();
 
   const handleLoginUser = async (cardInput?: string, pinInput?: string) => {
@@ -60,28 +57,12 @@ const LoginPage: React.FC<LogRegProps> = (props) => {
   return (
     <>
       <h2>Please Provide your card number and PIN</h2>
-      <LoginForm
-        cardInput={cardInput}
-        setCardInput={setCardInput}
-        pinInput={pinInput}
-        setPinInput={setPinInput}
-        handleLoginUser={handleLoginUser}
-      />
       <div>
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            handleLoginUser(cardInput, pinInput);
-          }}
-        >
-          LOGIN
-        </button>
+        <LoginForm handleLoginUser={handleLoginUser} />
       </div>
-      <div>
-        <Link to="/">
-          <button>RETURN</button>
-        </Link>
-      </div>
+      <Button onClick={() => {navigateTo("/")}}>
+        RETURN
+      </Button>
     </>
   );
 };

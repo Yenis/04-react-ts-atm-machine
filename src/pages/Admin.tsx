@@ -1,11 +1,14 @@
+import { Button } from "@material-ui/core";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { transactionStore } from "../data/transactionStore";
 
 const AdminMenu: React.FC = () => {
-  useEffect(()=>{
-    transactionStore.assignTotalCashAmountAsync()
-  })
+  const navigateTo = useNavigate();
+
+  useEffect(() => {
+    transactionStore.assignTotalCashAmountAsync();
+  });
 
   return (
     <>
@@ -13,19 +16,15 @@ const AdminMenu: React.FC = () => {
         <h1>_admin_menu</h1>
       </div>
       <div>
-        <Link to="/RegisterPage">
-          <button>REGISTER NEW USER</button>
-        </Link>
+        <Button onClick={() => navigateTo("/RegisterPage")}>
+          REGISTER NEW USER
+        </Button>
       </div>
       <div>
-        <Link to="/ServicePage">
-          <button>SERVICE ATM</button>
-        </Link>
+        <Button onClick={() => navigateTo("/ServicePage")}>SERVICE ATM</Button>
       </div>
       <div>
-        <Link to="/">
-          <button>RETURN</button>
-        </Link>
+        <Button onClick={() => navigateTo("/")}>RETURN</Button>
       </div>
     </>
   );

@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../helpers/currentUserHook";
 import React, { useEffect, useState } from "react";
+import { Button } from "@material-ui/core";
 
 export const TopLayout: React.FC = ({ children }: any) => {
   const { userContext } = useCurrentUser();
@@ -19,9 +20,7 @@ export const TopLayout: React.FC = ({ children }: any) => {
     <div>
       <div>
         <h2>Welcome to ATM</h2>
-        <h3>
-          Current User: {currentUser.userName ? currentUser.userName : "N/A"}
-        </h3>
+        {currentUser.userName && <h3>Current User: {currentUser.userName}</h3>}
         <h3>{time}</h3>
       </div>
       <div>{children}</div>
@@ -30,17 +29,15 @@ export const TopLayout: React.FC = ({ children }: any) => {
 };
 
 export const HomePage: React.FC = () => {
+  const navigateTo = useNavigate();
+
   return (
     <>
       <div>
-        <Link to="/LoginPage">
-          <button>LOGIN</button>
-        </Link>
+        <Button onClick={() => navigateTo("/LoginPage")}>LOGIN</Button>
       </div>
       <div>
-        <Link to="/AdminPage">
-          <button>ADMIN MENU</button>
-        </Link>
+        <Button onClick={() => navigateTo("/AdminPage")}>ADMIN MENU</Button>
       </div>
     </>
   );

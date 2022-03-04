@@ -1,18 +1,14 @@
-import { Link } from "react-router-dom";
+import { Button } from "@material-ui/core";
+import { useNavigate } from "react-router-dom";
 
 const MainMenuButtons: React.FC = () => {
+  const navigateTo = useNavigate();
   return (
-    <>
-      <Link to="StatusPage">
-        <button>STATUS</button>
-      </Link>
-      <Link to="DepositPage">
-        <button>DEPOSIT</button>
-      </Link>
-      <Link to="WithdrawPage">
-        <button>WITHDRAW</button>
-      </Link>
-    </>
+    <div>
+      <Button onClick={() => navigateTo("StatusPage")}>STATUS</Button>
+      <Button onClick={() => navigateTo("DepositPage")}>DEPOSIT</Button>
+      <Button onClick={() => navigateTo("WithdrawPage")}>WITHDRAW</Button>
+    </div>
   );
 };
 
