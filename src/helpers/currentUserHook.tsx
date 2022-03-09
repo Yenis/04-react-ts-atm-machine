@@ -1,28 +1,42 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 
 export interface User {
   cardNumber: string | undefined;
   userName: string | undefined;
 }
 
-export const emptyUser: User = {
+export const noUser: User = {
   cardNumber: undefined,
   userName: undefined,
 };
 
-const CurrentUserContext = createContext<User>(emptyUser);
+export const defaultUser: User = {
+  cardNumber: "0000000000000000",
+  userName: "defaultUser"
+}
+
+const CurrentUserContext = createContext({
+  currentUser: noUser,
+  setCurrentUser: (user: User) => {},
+});
 
 export const useCurrentUser = () => {
-  const [currentUser, setCurrentUser] = useState(emptyUser);
-  const userContext = useContext(CurrentUserContext);
+  const [user, setUser] = useState(noUser);
+
+  const currentLoggedInUser = useMemo(
+    () => ({ currentUser: user, setCurrentUser: setUser }),
+    [user]
+  );
+
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   const UserContextProvider = ({ children }: any) => {
     return (
-      <CurrentUserContext.Provider value={currentUser}>
+      <CurrentUserContext.Provider value={currentLoggedInUser}>
         {children}
       </CurrentUserContext.Provider>
     );
   };
 
-  return { currentUser, setCurrentUser, userContext, UserContextProvider } as const;
+  return { currentUser, setCurrentUser, UserContextProvider } as const;
 };

@@ -1,15 +1,8 @@
-import {
-  getAllUsersCardNumbersAsync,
-  getUserInfoAsync,
-} from "./userData";
 import { User } from "../helpers/currentUserHook";
+import { getAllUsersCardNumbersAsync, getUserInfoAsync } from "./db_users";
 
 class UserStore {
   usersData: User[] = [];
-
-  // constructor() {
-  //   this.initializeRegisteredUsersAsync();
-  // }
 
   async initializeRegisteredUsersAsync() {
     const users = await getAllUsersCardNumbersAsync();

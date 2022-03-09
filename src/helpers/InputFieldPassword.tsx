@@ -12,6 +12,7 @@ export const InputFieldPassword: React.FC<FieldAttributes<{}>> = ({
       placeholder={placeholder}
       type="password"
       {...field}
+      fullWidth
       helperText={errorText}
       error={!!errorText}
     />

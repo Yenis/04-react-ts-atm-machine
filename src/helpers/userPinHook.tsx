@@ -1,30 +1,40 @@
 import { createContext, useContext, useState } from "react";
+import RetainedCardPage from "../pages/Retained";
+
+export const DEFAULT_ATT_NUM = 3;
 
 export interface UserPin {
   cardNumber: string | undefined;
   pin: string | undefined;
-  pinAttempts: number | 0;
+  availablePinAttempts: number;
+  hasAvailablePinAttempts: boolean;
 }
 
 export const noPinData: UserPin = {
-  cardNumber: "-1",
-  pin: "-1",
-  pinAttempts: 3
+  cardNumber: undefined,
+  pin: undefined,
+  availablePinAttempts: DEFAULT_ATT_NUM,
+  hasAvailablePinAttempts: true,
 };
 
-const UserPinContext = createContext<UserPin>(noPinData);
+const UserPinContext = createContext({
+  userPinState: noPinData,
+  setPinState: (pinState: UserPin) => {},
+});
 
 export const useUserPin = () => {
-  const [userPinState, setPinState] = useState(noPinData);
-  const userPinContext = useContext(UserPinContext);
+  const [pin, setPin] = useState(noPinData);
+
+  const { userPinState, setPinState } = useContext(UserPinContext);
 
   const UserPinProvider = ({ children }: any) => {
     return (
-      <UserPinContext.Provider value={userPinState}>
-        {children}
+      <UserPinContext.Provider value={{ userPinState: pin, setPinState: setPin }}>
+        {pin.availablePinAttempts > 0 && children}
+        {pin.availablePinAttempts <= 0 && <RetainedCardPage />}
       </UserPinContext.Provider>
     );
   };
 
-  return { userPinState, setPinState, userPinContext, UserPinProvider } as const;
+  return { userPinState, setPinState, UserPinProvider } as const;
 };

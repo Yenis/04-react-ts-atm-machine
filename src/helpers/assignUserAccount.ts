@@ -1,11 +1,10 @@
-import {
-  getUserInfoAsync,
-  getUserPinStateAsync,
-  getUserTransactionsAsync,
-} from "../data/userData";
+
 import { User } from "./currentUserHook";
 import { UserPin } from "./userPinHook";
 import { UserBalance } from "./transactionsHook";
+import { getUserPinStateAsync } from "../data/db_pins";
+import { getUserTransactionsAsync } from "../data/db_transactions";
+import { getUserInfoAsync } from "../data/db_users";
 
 export async function assignUserAccount(cardNumber: string): Promise<User> {
   let userData = await getUserInfoAsync(cardNumber);

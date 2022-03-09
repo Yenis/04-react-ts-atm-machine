@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { TransactionType } from "../../components/PrintedReceipt";
 import { toast, ToastType } from "../../helpers/ToastManager";
-import { saveUserTransactionAsync } from "../../data/userData";
 import { ActionType, useTransaction } from "../../helpers/transactionsHook";
 import DepositForm from "../../components/DepositForm";
 import { Button } from "@material-ui/core";
+import { Page } from "../../helpers/Links";
+import { saveUserTransactionAsync } from "../../data/db_transactions";
 
 const DepositPage: React.FC = () => {
 
@@ -18,9 +19,8 @@ const DepositPage: React.FC = () => {
     if (!input) return;
     if (parseFloat(input) < 0) {
       toast.show({
-        title: ToastType.ERROR,
+        type: ToastType.ERROR,
         content: `Cannot Deposit Negative Value!`,
-        duration: 3000,
       });
       return;
     }
@@ -43,16 +43,15 @@ const DepositPage: React.FC = () => {
     });
 
     toast.show({
-      title: ToastType.SUCCESS,
+      type: ToastType.SUCCESS,
       content: `Deposited ${input} Imaginary Dolars`,
-      duration: 3000,
     });
   };
 
   return (
     <>
       <DepositForm handleDeposit={handleDeposit} />
-      <Button onClick={() => navigateTo("/MainMenu")}>RETURN</Button>
+      <Button variant="outlined" fullWidth onClick={() => navigateTo(Page.MAIN)}>RETURN</Button>
     </>
   );
 };

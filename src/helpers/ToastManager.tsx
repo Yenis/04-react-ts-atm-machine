@@ -10,7 +10,7 @@ export enum ToastType {
 
 interface ToastOptions {
   id?: string;
-  title: ToastType;
+  type: ToastType;
   content: string;
   duration?: number;
 }

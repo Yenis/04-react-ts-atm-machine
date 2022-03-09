@@ -2,6 +2,7 @@ import { Button } from "@material-ui/core";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { transactionStore } from "../data/transactionStore";
+import { Page } from "../helpers/Links";
 
 const AdminMenu: React.FC = () => {
   const navigateTo = useNavigate();
@@ -11,22 +12,22 @@ const AdminMenu: React.FC = () => {
   });
 
   return (
-    <>
+    <div className="main-menu-header">
       <div>
-        <h1>_admin_menu</h1>
+        <h2>_admin_menu_</h2>
       </div>
       <div>
-        <Button onClick={() => navigateTo("/RegisterPage")}>
+        <Button variant="outlined" fullWidth onClick={() => navigateTo(Page.REGISTER)}>
           REGISTER NEW USER
         </Button>
       </div>
       <div>
-        <Button onClick={() => navigateTo("/ServicePage")}>SERVICE ATM</Button>
+        <Button variant="outlined" fullWidth onClick={() => navigateTo(Page.SERVICE)}>SERVICE ATM</Button>
       </div>
       <div>
-        <Button onClick={() => navigateTo("/")}>RETURN</Button>
+        <Button variant="outlined" fullWidth onClick={() => navigateTo(Page.HOME)}>RETURN</Button>
       </div>
-    </>
+    </div>
   );
 };
 

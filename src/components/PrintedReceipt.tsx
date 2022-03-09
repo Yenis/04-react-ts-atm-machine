@@ -3,6 +3,7 @@ import { useTransaction } from "../helpers/transactionsHook";
 export enum TransactionType {
   WITHDRAW = "WITHDRAW",
   DEPOSIT = "DEPOSIT",
+  INIT = "INIT"
 }
 
 interface ReceiptProps {
@@ -15,7 +16,7 @@ const Receipt: React.FC<ReceiptProps> = (props) => {
   const { userTransactions } = useTransaction();
 
   return (
-    <div>
+    <div className="printed-receipt">
       <h2>Printed Receipt: {new Date().toLocaleDateString()}</h2>
 
       <h2>

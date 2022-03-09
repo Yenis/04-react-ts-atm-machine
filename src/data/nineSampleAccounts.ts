@@ -55,47 +55,56 @@ export const sampleAccountPins: UserPin[] = [
   {
     cardNumber: "1111111111111111",
     pin: "11111",
-    pinAttempts: 1,
+    availablePinAttempts: 1,
+    hasAvailablePinAttempts: true
   },
   {
     cardNumber: "2222222222222222",
     pin: "22222",
-    pinAttempts: 2,
+    availablePinAttempts: 2,
+    hasAvailablePinAttempts: true
   },
   {
     cardNumber: "3333333333333333",
     pin: "33333",
-    pinAttempts: 3,
+    availablePinAttempts: 3,
+    hasAvailablePinAttempts: true
   },
   {
     cardNumber: "4444444444444444",
     pin: "44444",
-    pinAttempts: 4,
+    availablePinAttempts: 4,
+    hasAvailablePinAttempts: true
   },
   {
     cardNumber: "5555555555555555",
     pin: "55555",
-    pinAttempts: 5,
+    availablePinAttempts: 5,
+    hasAvailablePinAttempts: true
   },
   {
     cardNumber: "6666666666666666",
     pin: "66666",
-    pinAttempts: 6,
+    availablePinAttempts: 6,
+    hasAvailablePinAttempts: true
   },
   {
     cardNumber: "7777777777777777",
     pin: "77777",
-    pinAttempts: 7,
+    availablePinAttempts: 7,
+    hasAvailablePinAttempts: true
   },
   {
     cardNumber: "8888888888888888",
     pin: "88888",
-    pinAttempts: 8,
+    availablePinAttempts: 8,
+    hasAvailablePinAttempts: true
   },
   {
     cardNumber: "9999999999999999",
     pin: "99999",
-    pinAttempts: 9,
+    availablePinAttempts: 9,
+    hasAvailablePinAttempts: true
   },
 ];
 

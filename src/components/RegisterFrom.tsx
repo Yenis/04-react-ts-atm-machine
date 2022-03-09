@@ -5,7 +5,7 @@ import { InputFieldPassword } from "../helpers/InputFieldPassword";
 import * as yup from "yup";
 
 interface RegisterFormProps {
-  handleRegisterUser: (arg0: string, arg1: string, arg2: string) => void;
+  handleRegisterUser: (userName: string, cardInput: string, pinInput: string) => void;
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = (props) => {
@@ -49,7 +49,7 @@ const RegisterForm: React.FC<RegisterFormProps> = (props) => {
             <InputFieldPassword name="pinInput" placeholder="5-digit PIN..." />
           </div>
           <div>
-            <Button disabled={isSubmitting} type="submit">
+            <Button variant="contained" fullWidth disabled={isSubmitting} type="submit">
               REGISTER
             </Button>
           </div>

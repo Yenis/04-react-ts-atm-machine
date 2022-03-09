@@ -24,8 +24,7 @@ export enum ActionType {
   }
 
 export const useTransaction = () => {
-  const { userContext } = useCurrentUser();
-  const currentUser = userContext;
+  const { currentUser } = useCurrentUser();
 
   useEffect(() => {
     let assignCurrentUserBalance = async () => {

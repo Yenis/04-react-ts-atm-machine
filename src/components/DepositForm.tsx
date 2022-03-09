@@ -1,18 +1,16 @@
 import { Button } from "@material-ui/core";
 import { Formik, Form } from "formik";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { InputFieldNumber } from "../helpers/InputFieldNumber";
 import MainMenuHeader from "./MainMenuHeader";
 import Receipt, { TransactionType } from "./PrintedReceipt";
 import * as yup from "yup";
 
 interface DepositFormProps {
-  handleDeposit: (arg0: string) => void;
+  handleDeposit: (amount: string) => void;
 }
 
 const DepositForm: React.FC<DepositFormProps> = (props) => {
-
-  const input = useRef("0");
   const [isComplete, completeTransaction] = useState(false);
 
   const validationSchema = yup.object({
@@ -21,24 +19,22 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
 
   return (
     <>
-      {!isComplete && (
-        <>
-          <MainMenuHeader />
-          <Formik
-            initialValues={{
-              amount: "",
-            }}
-            validationSchema={validationSchema}
-            onSubmit={(submitData, { setSubmitting }) => {
-              setSubmitting(true);
-              input.current = submitData.amount;
-              props.handleDeposit(submitData.amount);
-              if (parseFloat(input.current) > 0) 
-                completeTransaction(true);
-              setSubmitting(false);
-            }}
-          >
-            {({ isSubmitting }) => (
+      <MainMenuHeader />
+      <Formik
+        initialValues={{
+          amount: "",
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(submitData, { setSubmitting }) => {
+          setSubmitting(true);
+          props.handleDeposit(submitData.amount);
+          completeTransaction(true);
+          setSubmitting(false);
+        }}
+      >
+        {({ values, isSubmitting }) => (
+          <div className="input-form">
+            {!isComplete && (
               <Form>
                 <div>
                   <InputFieldNumber
@@ -47,22 +43,27 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
                   />
                 </div>
                 <div>
-                  <Button disabled={isSubmitting} type="submit">
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    disabled={isSubmitting}
+                    type="submit"
+                  >
                     SUBMIT
                   </Button>
                 </div>
               </Form>
             )}
-          </Formik>
-        </>
-      )}
-      {isComplete && (
-        <Receipt
-          type={TransactionType.DEPOSIT}
-          isSuccessful={isComplete ? true : false}
-          amount={parseFloat(input.current)}
-        />
-      )}
+            {isComplete && (
+              <Receipt
+                type={TransactionType.DEPOSIT}
+                isSuccessful={isComplete ? true : false}
+                amount={parseFloat(values.amount)}
+              />
+            )}
+          </div>
+        )}
+      </Formik>
     </>
   );
 };

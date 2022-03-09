@@ -1,31 +1,48 @@
 import { useNavigate } from "react-router-dom";
 import { toast, ToastType } from "../helpers/ToastManager";
-import { LogRegProps } from "./Login";
 
 import RegisterForm from "../components/RegisterFrom";
-import { isAlreadyRegistered, isCardValid } from "../validation/validateCard";
+import { isCardValid } from "../validation/validateCard";
+import { isAlreadyRegistered } from "../validation/validateUnique";
+import { useCurrentUser, User, defaultUser } from "../helpers/currentUserHook";
+import { TransactionType } from "../components/PrintedReceipt";
 import { isPinValid } from "../validation/validatePIN";
-import { UserPin } from "../helpers/userPinHook";
-import { User } from "../helpers/currentUserHook";
+import { DEFAULT_ATT_NUM, UserPin } from "../helpers/userPinHook";
 import { Button } from "@material-ui/core";
-import {
-  saveUserInfoAsync,
-  saveUserPinStateAsync,
-  saveUserTransactionAsync,
-} from "../data/userData";
+import { Page } from "../helpers/Links";
+import { saveUserPinStateAsync } from "../data/db_pins";
+import { saveUserTransactionAsync } from "../data/db_transactions";
+import { saveUserInfoAsync } from "../data/db_users";
 
-const RegisterPage: React.FC<LogRegProps> = (props) => {
+
+const RegisterPage: React.FC = () => {
   const navigateTo = useNavigate();
+
+  const {setCurrentUser} = useCurrentUser();
 
   const handleRegisterUser = async (
     userName?: string,
     cardInput?: string,
     pinInput?: string
   ) => {
-    if (!userName) userName = "default";
-    if (!cardInput || !isCardValid(cardInput)) return;
-    if (!pinInput || !isPinValid(pinInput)) return;
-    if (isAlreadyRegistered(cardInput)) return;
+    if (!userName) userName = defaultUser.userName;
+    if (!cardInput || !isCardValid(cardInput)) {
+      toast.show({
+        type: ToastType.ERROR,
+        content: "Card Number is not Valid",
+      });
+      return;
+    }
+
+    if (!pinInput || !isPinValid(pinInput)) {
+      toast.show({
+        type: ToastType.ERROR,
+        content: "Input PIN is not valid!",
+      });
+      return;
+    } 
+
+    if (await isAlreadyRegistered(cardInput)) return;
 
     let userInfo: User = {
       userName: userName,
@@ -34,11 +51,12 @@ const RegisterPage: React.FC<LogRegProps> = (props) => {
     let userPinState: UserPin = {
       cardNumber: cardInput,
       pin: pinInput,
-      pinAttempts: 3,
+      availablePinAttempts: DEFAULT_ATT_NUM,
+      hasAvailablePinAttempts: true
     };
     let userInitTransactionData = {
       cardNumber: cardInput,
-      transactionType: "INITIAL",
+      transactionType: TransactionType.INIT,
       amount: 0,
       date: new Date().toLocaleDateString(),
       time: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
@@ -49,25 +67,26 @@ const RegisterPage: React.FC<LogRegProps> = (props) => {
     await saveUserPinStateAsync(cardInput, userPinState);
     await saveUserTransactionAsync(cardInput, userInitTransactionData);
 
-    props.setCurrentUser(userInfo);
+    setCurrentUser(userInfo);
     toast.show({
-      title: ToastType.SUCCESS,
+      type: ToastType.SUCCESS,
       content: `Register User: ${userInfo.userName}, Card Number: ${userInfo.cardNumber}!`,
-      duration: 5000,
     });
-    navigateTo("/MainMenu");
+    navigateTo(Page.MAIN);
   };
 
   return (
-    <>
-      <h2>Please Provide your card number and PIN</h2>
-      <div>
-        <RegisterForm handleRegisterUser={handleRegisterUser} />
+    <div>
+      <div className="input-form">
+        <h2>Please Provide your card number and PIN</h2>
+        <div>
+          <RegisterForm handleRegisterUser={handleRegisterUser} />
+        </div>
       </div>
-      <Button onClick={() => {navigateTo("/")}}>
+      <Button variant="outlined" fullWidth onClick={() => {navigateTo(Page.HOME)}}>
         RETURN
       </Button>
-    </>
+    </div>
   );
 };
 

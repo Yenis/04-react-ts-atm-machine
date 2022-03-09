@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { InputFieldPassword } from "../helpers/InputFieldPassword";
 
 interface LoginFormProps {
-  handleLoginUser: (arg0: string, arg1: string) => void;
+  handleLoginUser: (cardInput: string, pinInput: string) => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = (props) => {
@@ -40,7 +40,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
             <InputFieldPassword name="pinInput" placeholder="5-digit PIN..." />
           </div>
           <div>
-            <Button disabled={isSubmitting} type="submit">
+            <Button variant="contained" fullWidth disabled={isSubmitting} type="submit">
               LOGIN
             </Button>
           </div>

@@ -1,6 +1,5 @@
 import { Button } from "@material-ui/core";
 import { Formik, Form } from "formik";
-import { useRef } from "react";
 import { InputFieldNumber } from "../helpers/InputFieldNumber";
 import MainMenuHeader from "./MainMenuHeader";
 import Receipt, { TransactionType } from "./PrintedReceipt";
@@ -8,12 +7,11 @@ import * as yup from "yup";
 
 interface WithdrawFormProps {
   isComplete: boolean;
-  completeTransaction: (arg0: boolean) => void;
-  handleWithdraw: (arg0: string) => void;
+  completeTransaction: React.Dispatch<React.SetStateAction<boolean>>
+  handleWithdraw: (amount: string) => void;
 }
 
 const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
-  const input = useRef("0");
 
   const validationSchema = yup.object({
     amount: yup.string().required(),
@@ -21,23 +19,21 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
 
   return (
     <>
-      {!props.isComplete && (
-        <>
-          <MainMenuHeader />
-          <Formik
-            initialValues={{
-              amount: "",
-            }}
-            validationSchema={validationSchema}
-
-            onSubmit={(submitData, { setSubmitting }) => {
-              setSubmitting(true);
-              input.current = submitData.amount;
-              props.handleWithdraw(submitData.amount);
-              setSubmitting(false);
-            }}
-          >
-            {({ isSubmitting }) => (
+      <MainMenuHeader />
+      <Formik
+        initialValues={{
+          amount: "",
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(submitData, { setSubmitting }) => {
+          setSubmitting(true);
+          props.handleWithdraw(submitData.amount);
+          setSubmitting(false);
+        }}
+      >
+        {({ values, isSubmitting }) => (
+          <div className="input-form">
+            {!props.isComplete && (
               <Form>
                 <div>
                   <InputFieldNumber
@@ -46,22 +42,22 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
                   />
                 </div>
                 <div>
-                  <Button disabled={isSubmitting} type="submit">
+                  <Button variant="contained" fullWidth disabled={isSubmitting} type="submit">
                     SUBMIT
                   </Button>
                 </div>
               </Form>
             )}
-          </Formik>
-        </>
-      )}
-      {props.isComplete && (
-        <Receipt
-          type={TransactionType.WITHDRAW}
-          isSuccessful={props.isComplete ? true : false}
-          amount={parseFloat(input.current)}
-        />
-      )}
+            {props.isComplete && (
+              <Receipt
+                type={TransactionType.WITHDRAW}
+                isSuccessful={props.isComplete ? true : false}
+                amount={parseFloat(values.amount)}
+              />
+            )}
+          </div>
+        )}
+      </Formik>
     </>
   );
 };

@@ -1,8 +1,6 @@
-import {
-  getAllUsersCardNumbersAsync,
-  getUserTransactionsAsync,
-} from "./userData";
 import { UserBalance } from "../helpers/transactionsHook";
+import { getUserTransactionsAsync } from "./db_transactions";
+import { getAllUsersCardNumbersAsync } from "./db_users";
 
 export class TransactionStore {
   usersTransactionData: UserBalance[] = [];

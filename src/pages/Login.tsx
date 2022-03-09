@@ -4,66 +4,79 @@ import { toast, ToastType } from "../helpers/ToastManager";
 import LoginForm from "../components/LoginForm";
 import { isCardValid } from "../validation/validateCard";
 import { isPinValid } from "../validation/validatePIN";
-import { UserPin } from "../helpers/userPinHook";
-import { User } from "../helpers/currentUserHook";
+import { useUserPin } from "../helpers/userPinHook";
+import { useCurrentUser } from "../helpers/currentUserHook";
 import { Button } from "@material-ui/core";
 import {
   assignUserAccount,
   assignUserPinState,
 } from "../helpers/assignUserAccount";
-import { saveUserPinStateAsync } from "../data/userData";
+import { Page } from "../helpers/Links";
+import { saveUserPinStateAsync } from "../data/db_pins";
 
-export interface LogRegProps {
-  setCurrentUser: (arg0: User) => void;
-  setPinState: (arg0: UserPin) => void;
-}
-
-const LoginPage: React.FC<LogRegProps> = (props) => {
+const LoginPage: React.FC = () => {
   const navigateTo = useNavigate();
+  const { setCurrentUser } = useCurrentUser();
+  const { setPinState } = useUserPin();
 
   const handleLoginUser = async (cardInput?: string, pinInput?: string) => {
-    if (!cardInput || !isCardValid(cardInput)) return;
-    if (!pinInput || !isPinValid(pinInput)) return;
-
-    let userInfo = await assignUserAccount(cardInput);
-    let pinState = await assignUserPinState(cardInput);
-
-    if (pinState.pin !== pinInput) {
+    if (!cardInput || !isCardValid(cardInput)) {
       toast.show({
-        title: ToastType.ERROR,
-        content: "Provided PIN is wrong!",
-        duration: 9000,
-      });
-      await saveUserPinStateAsync(cardInput, {
-        ...pinState,
-        pinAttempts: pinState.pinAttempts - 1,
-      });
-      props.setPinState({
-        ...pinState,
-        pinAttempts: pinState.pinAttempts - 1,
+        type: ToastType.ERROR,
+        content: "Card Number is not Valid",
       });
       return;
     }
 
-    props.setCurrentUser(userInfo);
+    if (!pinInput || !isPinValid(pinInput)) {
+      toast.show({
+        type: ToastType.ERROR,
+        content: "Input PIN is not valid!",
+      });
+      return;
+    }
+
+    let userInfo = await assignUserAccount(cardInput);
+    let pinData = await assignUserPinState(cardInput);
+
+    if (pinData.pin !== pinInput) {
+      toast.show({
+        type: ToastType.ERROR,
+        content: "Provided PIN is wrong!",
+      });
+
+      const pinState = {
+        ...pinData,
+        availablePinAttempts: pinData.availablePinAttempts - 1,
+      };
+
+      await saveUserPinStateAsync(cardInput, pinState);
+      setPinState(pinState);
+      return;
+    }
+
+    setPinState(pinData);
+    setCurrentUser(userInfo);
     toast.show({
-      title: ToastType.SUCCESS,
+      type: ToastType.SUCCESS,
       content: `Login User: ${userInfo.userName}!`,
       duration: 5000,
     });
-    navigateTo("/MainMenu");
+    navigateTo(Page.MAIN);
   };
 
   return (
-    <>
-      <h2>Please Provide your card number and PIN</h2>
-      <div>
-        <LoginForm handleLoginUser={handleLoginUser} />
+    <div>
+      <div className="input-form">
+        <h3>Please Provide your card number and PIN</h3>
+        <div>
+          <LoginForm handleLoginUser={handleLoginUser} />
+        </div>
       </div>
-      <Button onClick={() => {navigateTo("/")}}>
+      <Button variant="outlined" fullWidth onClick={() => {navigateTo(Page.HOME)}}>
         RETURN
       </Button>
-    </>
+    </div>
   );
 };
 

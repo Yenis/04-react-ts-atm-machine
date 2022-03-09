@@ -1,14 +1,13 @@
 import { useCurrentUser } from "../helpers/currentUserHook";
 
 const MainMenuHeader: React.FC = () => {
-  const { userContext } = useCurrentUser()
-  const currentUser = userContext;
-  
+  const { currentUser } = useCurrentUser();
+
   return (
-    <>
-      <h1>Welcome! {currentUser.userName}</h1>
+    <div className="main-menu-header">
+      <h2>Welcome! {currentUser.userName}</h2>
       <h2>Card: {currentUser.cardNumber}</h2>
-    </>
+    </div>
   );
 };
 

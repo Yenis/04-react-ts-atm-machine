@@ -12,6 +12,8 @@ export const InputFieldNumber: React.FC<FieldAttributes<{}>> = ({
       placeholder={placeholder}
       type="number"
       {...field}
+      fullWidth
+      autoFocus
       helperText={errorText}
       error={!!errorText}
     />

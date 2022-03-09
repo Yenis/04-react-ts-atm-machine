@@ -3,11 +3,9 @@ import {
   sampleAccounts,
   sampleTransactions,
 } from "../data/nineSampleAccounts";
-import {
-  saveUserInfoAsync,
-  saveUserPinStateAsync,
-  saveUserTransactionAsync,
-} from "../data/userData";
+import { saveUserPinStateAsync } from "../data/db_pins";
+import { saveUserTransactionAsync } from "../data/db_transactions";
+import { saveUserInfoAsync } from "../data/db_users";
 
 export const initializeUserInfoOnDbCreationAsync = async () => {
   await Promise.all(
