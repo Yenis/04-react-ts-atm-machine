@@ -5,7 +5,7 @@ import { Button } from "@material-ui/core";
 import { noUser, useCurrentUser } from "../helpers/currentUserHook";
 
 import { toast, ToastType } from "../helpers/ToastManager";
-import { DEFAULT_ATT_NUM, useUserPin } from "../helpers/userPinHook";
+import { resetPinAttempts, useUserPin } from "../helpers/userPinHook";
 import { Page } from "../helpers/Links";
 import { saveUserPinStateAsync } from "../data/db_pins";
 
@@ -15,11 +15,12 @@ const MainMenuPage: React.FC = () => {
   const { userPinState, setPinState } = useUserPin();
 
   const handleLogOutUser = async () => {
-    const pinData = { ...userPinState, availablePinAttempts: DEFAULT_ATT_NUM };
-    await saveUserPinStateAsync(userPinState.cardNumber, pinData)
-    setPinState(pinData)
 
-    setCurrentUser({...noUser});
+    resetPinAttempts(userPinState)
+    await saveUserPinStateAsync(userPinState.cardNumber, userPinState)
+    setPinState(userPinState)
+
+    setCurrentUser(noUser);
     toast.show({
       type: ToastType.SUCCESS,
       content: `User: ${currentUser.userName} has Logged Out`

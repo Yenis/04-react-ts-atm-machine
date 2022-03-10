@@ -3,12 +3,15 @@ import { Button } from "@material-ui/core";
 import { InputField } from "../helpers/InputField";
 import * as yup from "yup";
 import { InputFieldPassword } from "../helpers/InputFieldPassword";
+import { useState } from "react";
 
 interface LoginFormProps {
   handleLoginUser: (cardInput: string, pinInput: string) => void;
 }
 
 const LoginForm: React.FC<LoginFormProps> = (props) => {
+  const [isCardInserted, toggleInsertCard] = useState(false);
+
   const validationSchema = yup.object({
     cardInput: yup.string().required().min(16).max(16),
     pinInput: yup.string().required().min(5).max(5),
@@ -28,7 +31,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
         setSubmitting(false);
       }}
     >
-      {({ isSubmitting }) => (
+      {({ values, isSubmitting }) => (
         <Form>
           <div>
             <InputField
@@ -36,14 +39,34 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
               placeholder="16-digit Card Number..."
             />
           </div>
-          <div>
-            <InputFieldPassword name="pinInput" placeholder="5-digit PIN..." />
-          </div>
-          <div>
-            <Button variant="contained" fullWidth disabled={isSubmitting} type="submit">
-              LOGIN
+          {!isCardInserted && (
+            <Button
+              variant="contained"
+              fullWidth
+              disabled={isSubmitting}
+              onClick={() => {
+                if (values.cardInput) toggleInsertCard(true);
+              }}
+            >
+              INSERT CARD
             </Button>
-          </div>
+          )}
+          {isCardInserted && (
+            <div>
+              <InputFieldPassword
+                name="pinInput"
+                placeholder="5-digit PIN..."
+              />
+              <Button
+                variant="contained"
+                fullWidth
+                disabled={isSubmitting}
+                type="submit"
+              >
+                LOGIN
+              </Button>
+            </div>
+          )}
         </Form>
       )}
     </Formik>

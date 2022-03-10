@@ -5,16 +5,56 @@ import { InputFieldNumber } from "../helpers/InputFieldNumber";
 import MainMenuHeader from "./MainMenuHeader";
 import Receipt, { TransactionType } from "./PrintedReceipt";
 import * as yup from "yup";
+import { useUserPin } from "../helpers/userPinHook";
+import { saveUserPinStateAsync } from "../data/db_pins";
+import { toast, ToastType } from "../helpers/ToastManager";
+import { isPinValid } from "../validation/validatePIN";
+import { isInputPinCorrect } from "../validation/validatePinCorrect";
+import { InputFieldPassword } from "../helpers/InputFieldPassword";
 
 interface DepositFormProps {
   handleDeposit: (amount: string) => void;
 }
 
 const DepositForm: React.FC<DepositFormProps> = (props) => {
+  const { userPinState, setPinState } = useUserPin();
+
+  const [isDepositing, toggleDeposit] = useState(false);
   const [isComplete, completeTransaction] = useState(false);
+
+  const validateIsInputPinCorrect = async (pinInput?: string) => {
+    let isPinInputCorrect;
+    if (!pinInput || !isPinValid(pinInput)) {
+      toast.show({
+        type: ToastType.ERROR,
+        content: "Input PIN is not valid!",
+      });
+      return;
+    }
+
+    if (userPinState.pin && !isInputPinCorrect(pinInput, userPinState.pin)) {
+      toast.show({
+        type: ToastType.ERROR,
+        content: "Provided PIN is wrong!",
+      });
+
+      const newPinState = {
+        ...userPinState,
+        remainingPinAttempts: userPinState.remainingPinAttempts - 1,
+      };
+
+      await saveUserPinStateAsync(userPinState.cardNumber, newPinState);
+      setPinState(newPinState);
+      isPinInputCorrect = false;
+    } else {
+      isPinInputCorrect = true;
+    }
+    return isPinInputCorrect;
+  };
 
   const validationSchema = yup.object({
     amount: yup.string().required(),
+    pinInput: yup.string().min(5).max(5),
   });
 
   return (
@@ -23,12 +63,15 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
       <Formik
         initialValues={{
           amount: "",
+          pinInput: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={(submitData, { setSubmitting }) => {
+        onSubmit={async (submitData, { setSubmitting }) => {
           setSubmitting(true);
-          props.handleDeposit(submitData.amount);
-          completeTransaction(true);
+          if (await validateIsInputPinCorrect(submitData.pinInput)) {
+            props.handleDeposit(submitData.amount);
+            completeTransaction(true);
+          }
           setSubmitting(false);
         }}
       >
@@ -36,22 +79,33 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
           <div className="input-form">
             {!isComplete && (
               <Form>
-                <div>
-                  <InputFieldNumber
-                    name="amount"
-                    placeholder="Enter Amount..."
-                  />
-                </div>
-                <div>
+                <InputFieldNumber name="amount" placeholder="Enter Amount..." />
+                {!isDepositing && (
                   <Button
                     variant="contained"
-                    fullWidth
                     disabled={isSubmitting}
-                    type="submit"
+                    fullWidth
+                    onClick={() => {
+                      if (values.amount) toggleDeposit(true);
+                    }}
                   >
                     SUBMIT
                   </Button>
-                </div>
+                )}
+                {isDepositing && (
+                  <div>
+                    <InputFieldPassword name="pinInput" placeholder="ENTER PIN" />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disabled={isSubmitting}
+                      fullWidth
+                      type="submit"
+                    >
+                      DEPOSIT {values.amount}
+                    </Button>
+                  </div>
+                )}
               </Form>
             )}
             {isComplete && (

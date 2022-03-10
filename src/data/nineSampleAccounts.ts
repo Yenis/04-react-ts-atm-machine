@@ -3,10 +3,10 @@ import { UserBalance } from "../helpers/transactionsHook";
 import { UserPin } from "../helpers/userPinHook";
 
 export interface UserTransaction extends UserBalance {
-  transactionType: string,
-  amount: number,
-  date: string,
-  time: string,
+  transactionType: string;
+  amount: number;
+  date: string;
+  time: string;
 }
 
 const dateToday = new Date().toLocaleDateString();
@@ -55,56 +55,47 @@ export const sampleAccountPins: UserPin[] = [
   {
     cardNumber: "1111111111111111",
     pin: "11111",
-    availablePinAttempts: 1,
-    hasAvailablePinAttempts: true
+    remainingPinAttempts: 1,
   },
   {
     cardNumber: "2222222222222222",
     pin: "22222",
-    availablePinAttempts: 2,
-    hasAvailablePinAttempts: true
+    remainingPinAttempts: 2,
   },
   {
     cardNumber: "3333333333333333",
     pin: "33333",
-    availablePinAttempts: 3,
-    hasAvailablePinAttempts: true
+    remainingPinAttempts: 3,
   },
   {
     cardNumber: "4444444444444444",
     pin: "44444",
-    availablePinAttempts: 4,
-    hasAvailablePinAttempts: true
+    remainingPinAttempts: 4,
   },
   {
     cardNumber: "5555555555555555",
     pin: "55555",
-    availablePinAttempts: 5,
-    hasAvailablePinAttempts: true
+    remainingPinAttempts: 5,
   },
   {
     cardNumber: "6666666666666666",
     pin: "66666",
-    availablePinAttempts: 6,
-    hasAvailablePinAttempts: true
+    remainingPinAttempts: 6,
   },
   {
     cardNumber: "7777777777777777",
     pin: "77777",
-    availablePinAttempts: 7,
-    hasAvailablePinAttempts: true
+    remainingPinAttempts: 7,
   },
   {
     cardNumber: "8888888888888888",
     pin: "88888",
-    availablePinAttempts: 8,
-    hasAvailablePinAttempts: true
+    remainingPinAttempts: 8,
   },
   {
     cardNumber: "9999999999999999",
     pin: "99999",
-    availablePinAttempts: 9,
-    hasAvailablePinAttempts: true
+    remainingPinAttempts: 9,
   },
 ];
 

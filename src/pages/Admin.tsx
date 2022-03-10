@@ -1,33 +1,117 @@
 import { Button } from "@material-ui/core";
-import { useEffect } from "react";
+import { Formik, Form } from "formik";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { transactionStore } from "../data/transactionStore";
+import { InputFieldPassword } from "../helpers/InputFieldPassword";
 import { Page } from "../helpers/Links";
+import * as yup from "yup";
+import { toast, ToastType } from "../helpers/ToastManager";
 
 const AdminMenu: React.FC = () => {
+  const [hasAccess, allowAccess] = useState(false);
   const navigateTo = useNavigate();
 
   useEffect(() => {
     transactionStore.assignTotalCashAmountAsync();
+    console.log(transactionStore.allUsersTotal);
+  });
+
+  const handleAdminPinInput = (inputValue: string) => {
+    if (!inputValue) return;
+
+    if (inputValue === transactionStore.allUsersTotal.toString()) {
+      allowAccess(true);
+    } else {
+      toast.show({
+        type: ToastType.ERROR,
+        content: "Input PIN is not valid!",
+      });
+      navigateTo(Page.HOME)
+    }
+  }
+
+  const validationSchema = yup.object({
+    adminPin: yup.string().required(),
   });
 
   return (
-    <div className="main-menu-header">
-      <div>
-        <h2>_admin_menu_</h2>
-      </div>
-      <div>
-        <Button variant="outlined" fullWidth onClick={() => navigateTo(Page.REGISTER)}>
-          REGISTER NEW USER
-        </Button>
-      </div>
-      <div>
-        <Button variant="outlined" fullWidth onClick={() => navigateTo(Page.SERVICE)}>SERVICE ATM</Button>
-      </div>
-      <div>
-        <Button variant="outlined" fullWidth onClick={() => navigateTo(Page.HOME)}>RETURN</Button>
-      </div>
-    </div>
+    <Formik
+      initialValues={{
+        adminPin: "",
+      }}
+      validationSchema={validationSchema}
+      onSubmit={(submitData, { setSubmitting }) => {
+        setSubmitting(true);
+          handleAdminPinInput(submitData.adminPin);
+        setSubmitting(false);
+      }}
+    >
+      {({ isSubmitting }) => (
+        <div className="input-form">
+          {!hasAccess && (
+            <Form>
+              <InputFieldPassword
+                name="adminPin"
+                placeholder="Enter Admin PIN"
+              />
+              <Button
+                variant="contained"
+                disabled={isSubmitting}
+                fullWidth
+                color="secondary"
+                type="submit"
+              >
+                ADMIN LOGIN
+              </Button>
+              <div>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => navigateTo(Page.HOME)}
+                >
+                  RETURN
+                </Button>
+              </div>
+            </Form>
+          )}
+          {hasAccess && (
+            <div className="main-menu-header">
+              <div>
+                <h3>_admin_menu_</h3>
+              </div>
+              <div>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => navigateTo(Page.REGISTER)}
+                >
+                  REGISTER NEW USER
+                </Button>
+              </div>
+              <div>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => navigateTo(Page.SERVICE)}
+                >
+                  SERVICE ATM
+                </Button>
+              </div>
+              <div>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => navigateTo(Page.HOME)}
+                >
+                  RETURN
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </Formik>
   );
 };
 

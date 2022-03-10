@@ -67,17 +67,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById("root")
 );
-
-//--- TODO ---//
-
-// Seperate Card Input From Pin Input - Card Input appears first - to simulate card reading,
-//  then the PIN input appears.
-
-// Implement Pin input requirement for any transaction
-
-// Implement number keyboard for all inputs, instead of input text fields
-
-// Implement cash dispenser for notes in multiples of $20
-
-// Implement Admin Menu special password
-// Allow Admin to eject any retained cards, kept because of wrong Pin input

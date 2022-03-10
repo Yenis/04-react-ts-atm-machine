@@ -6,6 +6,7 @@ import {
 import { saveUserPinStateAsync } from "../data/db_pins";
 import { saveUserTransactionAsync } from "../data/db_transactions";
 import { saveUserInfoAsync } from "../data/db_users";
+import { atmNumber, saveAtmStateAsync } from "../data/db_adminService";
 
 export const initializeUserInfoOnDbCreationAsync = async () => {
   await Promise.all(
@@ -29,4 +30,8 @@ export const initializeUserTransactionsOnDbCreationAsync = async () => {
       await saveUserTransactionAsync(account.cardNumber, account);
     })
   );
+};
+
+export const initializeAtmStateAsync = async () => {
+      await saveAtmStateAsync(atmNumber, false);
 };

@@ -12,16 +12,18 @@ import DepositPage from "../pages/MainMenu/Deposit";
 import WithdrawPage from "../pages/MainMenu/Withdraw";
 import AdminMenu from "../pages/Admin";
 import AdminServicePage from "../pages/Service";
-
+import { useAtmState } from "../helpers/AdminServiceContext";
 
 const App: React.FC = () => {
   const { UserContextProvider } = useCurrentUser();
   const { UserPinProvider } = useUserPin();
+  const { AtmStateProvider } = useAtmState();
 
   return (
-    <UserContextProvider>
-      <UserPinProvider>
+      <UserContextProvider>
         <MainLayout>
+        <UserPinProvider>
+          <AtmStateProvider>
             <Routes>
               <Route path={Page.HOME} element={<HomePage />}></Route>
               <Route path={Page.LOGIN} element={<LoginPage />}></Route>
@@ -33,9 +35,10 @@ const App: React.FC = () => {
               <Route path={Page.SERVICE} element={<AdminServicePage />}></Route>
               <Route path={Page.ADMIN} element={<AdminMenu />}></Route>
             </Routes>
+            </AtmStateProvider>
+        </UserPinProvider>
         </MainLayout>
-      </UserPinProvider>
-    </UserContextProvider>
+      </UserContextProvider>
   );
 };
 

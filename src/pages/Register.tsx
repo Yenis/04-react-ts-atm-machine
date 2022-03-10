@@ -51,8 +51,7 @@ const RegisterPage: React.FC = () => {
     let userPinState: UserPin = {
       cardNumber: cardInput,
       pin: pinInput,
-      availablePinAttempts: DEFAULT_ATT_NUM,
-      hasAvailablePinAttempts: true
+      remainingPinAttempts: DEFAULT_ATT_NUM,
     };
     let userInitTransactionData = {
       cardNumber: cardInput,

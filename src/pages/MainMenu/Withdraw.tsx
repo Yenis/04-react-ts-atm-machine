@@ -10,6 +10,8 @@ import { Page } from "../../helpers/Links";
 import { saveUserTransactionAsync } from "../../data/db_transactions";
 
 const WithdrawPage: React.FC = () => {
+
+  const [isWithdrawing, toggleWithdraw] = useState(false);
   const [isComplete, completeTransaction] = useState(false);
 
   const { userTransactions, dispatch } = useTransaction();
@@ -56,12 +58,15 @@ const WithdrawPage: React.FC = () => {
         type: ToastType.ERROR,
         content: `Cannot Withdraw More Cash than Available. Current Status is ${userTransactions.balance}`,
       });
+      toggleWithdraw(false);
     }
   };
 
   return (
     <>
       <WithdrawForm
+        isWithdrawing={isWithdrawing}
+        toggleWithdraw={toggleWithdraw}
         isComplete={isComplete}
         completeTransaction={completeTransaction}
         handleWithdraw={handleWithdraw}

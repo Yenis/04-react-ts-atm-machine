@@ -7,15 +7,17 @@ import { isPinValid } from "../validation/validatePIN";
 import { useUserPin } from "../helpers/userPinHook";
 import { useCurrentUser } from "../helpers/currentUserHook";
 import { Button } from "@material-ui/core";
+import { Page } from "../helpers/Links";
 import {
   assignUserAccount,
   assignUserPinState,
 } from "../helpers/assignUserAccount";
-import { Page } from "../helpers/Links";
 import { saveUserPinStateAsync } from "../data/db_pins";
+import { isInputPinCorrect } from "../validation/validatePinCorrect";
 
 const LoginPage: React.FC = () => {
   const navigateTo = useNavigate();
+  
   const { setCurrentUser } = useCurrentUser();
   const { setPinState } = useUserPin();
 
@@ -39,7 +41,7 @@ const LoginPage: React.FC = () => {
     let userInfo = await assignUserAccount(cardInput);
     let pinData = await assignUserPinState(cardInput);
 
-    if (pinData.pin !== pinInput) {
+    if (pinData.pin && !isInputPinCorrect(pinInput, pinData.pin)) {
       toast.show({
         type: ToastType.ERROR,
         content: "Provided PIN is wrong!",
@@ -47,7 +49,7 @@ const LoginPage: React.FC = () => {
 
       const pinState = {
         ...pinData,
-        availablePinAttempts: pinData.availablePinAttempts - 1,
+        remainingPinAttempts: pinData.remainingPinAttempts - 1,
       };
 
       await saveUserPinStateAsync(cardInput, pinState);
