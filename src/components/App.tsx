@@ -1,9 +1,9 @@
 import React from "react";
 import { TopLayout as MainLayout, HomePage } from "../pages/Home";
-import { useCurrentUser } from "../helpers/currentUserHook";
-import { useUserPin } from "../helpers/userPinHook";
+import { useCurrentUser } from "../helpers/customHooks/currentUserHook";
+import { useUserPin } from "../helpers/customHooks/userPinHook";
 import { Routes, Route } from "react-router-dom";
-import { Page } from "../helpers/Links";
+import { Page } from "../helpers/pageLinks";
 import LoginPage from "../pages/Login";
 import RegisterPage from "../pages/Register";
 import MainMenuPage from "../pages/Main";
@@ -12,7 +12,7 @@ import DepositPage from "../pages/MainMenu/Deposit";
 import WithdrawPage from "../pages/MainMenu/Withdraw";
 import AdminMenu from "../pages/Admin";
 import AdminServicePage from "../pages/Service";
-import { useAtmState } from "../helpers/AdminServiceContext";
+import { useAtmState } from "../helpers/customHooks/adminServiceHook";
 
 const App: React.FC = () => {
   const { UserContextProvider } = useCurrentUser();

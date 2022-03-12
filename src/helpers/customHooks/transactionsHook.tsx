@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from "react";
-import { assignUserBalance } from "./assignUserAccount";
+import { getUserTransactionsAsync } from "../../data/db_transactions";
 import { useCurrentUser } from "./currentUserHook";
 
 export interface UserBalance {
@@ -29,7 +29,7 @@ export const useTransaction = () => {
   useEffect(() => {
     let assignCurrentUserBalance = async () => {
       if (!currentUser.cardNumber) return;
-      let userTransactionData = await assignUserBalance(currentUser.cardNumber);
+      let userTransactionData = await getUserTransactionsAsync(currentUser.cardNumber);
 
       if (!userTransactionData.balance) userTransactionData.balance = 0;
       dispatch({ type: ActionType.INIT, payload: userTransactionData });

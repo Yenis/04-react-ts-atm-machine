@@ -1,22 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { TransactionType } from "../../components/PrintedReceipt";
-import { isTransactionValid } from "../../validation/validateAmount";
-import { ActionType, useTransaction } from "../../helpers/transactionsHook";
+import { isTransactionPossible } from "../../validation/validateAmount";
+import {
+  ActionType,
+  useTransaction,
+} from "../../helpers/customHooks/transactionsHook";
 import WithdrawForm from "../../components/WithdrawForm";
 import { Button } from "@material-ui/core";
-import { Page } from "../../helpers/Links";
+import { Page } from "../../helpers/pageLinks";
 import { saveUserTransactionAsync } from "../../data/db_transactions";
-import { throwError, throwErrorCannotWithdrawOver, throwMessage, throwMessageTransactionSuccess, } from "../../helpers/ToastMessages";
+import {
+  throwError,
+  throwErrorCannotWithdrawOver,
+  throwMessage,
+  throwMessageTransactionSuccess,
+} from "../../helpers/toastr/ToastMessages";
 import { useTranslation } from "react-i18next";
 
 const WithdrawPage: React.FC = () => {
-
   const [isWithdrawing, toggleWithdraw] = useState(false);
   const [isComplete, completeTransaction] = useState(false);
 
   const { userTransactions, dispatch } = useTransaction();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const navigateTo = useNavigate();
 
@@ -25,11 +32,11 @@ const WithdrawPage: React.FC = () => {
     if (!userTransactions.cardNumber) return;
     if (!input) return;
     if (parseFloat(input) < 0) {
-      throwError(t("cannot-withdraw-negative"))
+      throwError(t("cannot-withdraw-negative"));
       return;
     }
 
-    if (isTransactionValid(userTransactions.balance, parseFloat(input))) {
+    if (isTransactionPossible(userTransactions.balance, parseFloat(input))) {
       dispatch({
         type: ActionType.WITHDRAW,
         payload: {
@@ -47,11 +54,14 @@ const WithdrawPage: React.FC = () => {
         balance: userTransactions.balance - parseFloat(input),
       });
       throwMessageTransactionSuccess(t("withdrawn-amount"), input);
-      throwMessage(t("transaction-completed"))
+      throwMessage(t("transaction-completed"));
       completeTransaction(true);
 
     } else {
-      throwErrorCannotWithdrawOver(t("cannot-withdraw-over-amount"), userTransactions.balance);
+      throwErrorCannotWithdrawOver(
+        t("cannot-withdraw-over-amount"),
+        userTransactions.balance
+      );
       toggleWithdraw(false);
     }
   };
@@ -65,7 +75,13 @@ const WithdrawPage: React.FC = () => {
         completeTransaction={completeTransaction}
         handleWithdraw={handleWithdraw}
       />
-      <Button variant="outlined" fullWidth onClick={() => navigateTo(Page.MAIN)}>RETURN</Button>
+      <Button
+        variant="outlined"
+        fullWidth
+        onClick={() => navigateTo(Page.MAIN)}
+      >
+        {t("return")}
+      </Button>
     </>
   );
 };

@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { transactionStore } from "../data/transactionStore";
 import { InputFieldPassword } from "../components/InputFieldPassword";
-import { Page } from "../helpers/Links";
+import { Page } from "../helpers/pageLinks";
 import * as yup from "yup";
-import { throwError } from "../helpers/ToastMessages";
+import { throwError } from "../helpers/toastr/ToastMessages";
 import { useTranslation } from "react-i18next";
 
 const AdminMenu: React.FC = () => {
   const [hasAccess, allowAccess] = useState(false);
   const navigateTo = useNavigate();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     transactionStore.assignTotalCashAmountAsync();
@@ -25,13 +25,13 @@ const AdminMenu: React.FC = () => {
     if (inputValue === transactionStore.allUsersTotal.toString()) {
       allowAccess(true);
     } else {
-      throwError(t("invalid-pin"))
-      navigateTo(Page.HOME)
+      throwError(t("invalid-pin"));
+      navigateTo(Page.HOME);
     }
-  }
+  };
 
   const validationSchema = yup.object({
-    adminPin: yup.string().required(),
+    adminPin: yup.string().required(t("required-field")),
   });
 
   return (
@@ -40,9 +40,10 @@ const AdminMenu: React.FC = () => {
         adminPin: "",
       }}
       validationSchema={validationSchema}
+
       onSubmit={(submitData, { setSubmitting }) => {
         setSubmitting(true);
-          handleAdminPinInput(submitData.adminPin);
+        handleAdminPinInput(submitData.adminPin);
         setSubmitting(false);
       }}
     >
@@ -52,7 +53,7 @@ const AdminMenu: React.FC = () => {
             <Form>
               <InputFieldPassword
                 name="adminPin"
-                placeholder="Enter Admin PIN"
+                placeholder={t("enter-admin-pin")}
               />
               <Button
                 variant="contained"
@@ -61,7 +62,7 @@ const AdminMenu: React.FC = () => {
                 color="secondary"
                 type="submit"
               >
-                ADMIN LOGIN
+                {t("admin-login")}
               </Button>
               <div>
                 <Button
@@ -69,7 +70,7 @@ const AdminMenu: React.FC = () => {
                   fullWidth
                   onClick={() => navigateTo(Page.HOME)}
                 >
-                  RETURN
+                  {t("return")}
                 </Button>
               </div>
             </Form>
@@ -77,7 +78,7 @@ const AdminMenu: React.FC = () => {
           {hasAccess && (
             <div className="main-menu-header">
               <div>
-                <h3>_admin_menu_</h3>
+                <h3>{t("admin-menu")}</h3>
               </div>
               <div>
                 <Button
@@ -85,7 +86,7 @@ const AdminMenu: React.FC = () => {
                   fullWidth
                   onClick={() => navigateTo(Page.REGISTER)}
                 >
-                  REGISTER NEW USER
+                  {t("register-new-user")}
                 </Button>
               </div>
               <div>
@@ -94,7 +95,7 @@ const AdminMenu: React.FC = () => {
                   fullWidth
                   onClick={() => navigateTo(Page.SERVICE)}
                 >
-                  SERVICE ATM
+                  {t("service-atm")}
                 </Button>
               </div>
               <div>
@@ -103,7 +104,7 @@ const AdminMenu: React.FC = () => {
                   fullWidth
                   onClick={() => navigateTo(Page.HOME)}
                 >
-                  RETURN
+                  {t("return")}
                 </Button>
               </div>
             </div>

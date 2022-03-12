@@ -1,4 +1,4 @@
-import { UserBalance } from "../helpers/transactionsHook";
+import { UserBalance } from "../helpers/customHooks/transactionsHook";
 import { getUserTransactionsAsync } from "./db_transactions";
 import { getAllUsersCardNumbersAsync } from "./db_users";
 

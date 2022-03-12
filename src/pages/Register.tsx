@@ -3,25 +3,24 @@ import { useNavigate } from "react-router-dom";
 import RegisterForm from "../components/RegisterFrom";
 import { isCardValid } from "../validation/validateCard";
 import { isAlreadyRegistered } from "../validation/validateUnique";
-import { useCurrentUser } from "../helpers/currentUserHook";
+import { useCurrentUser } from "../helpers/customHooks/currentUserHook";
 import { isPinValid } from "../validation/validatePIN";
 import { Button } from "@material-ui/core";
-import { Page } from "../helpers/Links";
+import { Page } from "../helpers/pageLinks";
 import { saveUserPinStateAsync } from "../data/db_pins";
 import { saveUserTransactionAsync } from "../data/db_transactions";
 import { saveUserInfoAsync } from "../data/db_users";
 import {
   throwError,
   throwMessageUserAccess,
-} from "../helpers/ToastMessages";
+} from "../helpers/toastr/ToastMessages";
 import { prepareUserTemplateForRegistration } from "../helpers/prepareRegisterData";
 import { useTranslation } from "react-i18next";
 
 const RegisterPage: React.FC = () => {
-  const navigateTo = useNavigate();
-
   const { setCurrentUser } = useCurrentUser();
-  const {t} = useTranslation()
+  const { t } = useTranslation();
+  const navigateTo = useNavigate();
 
   const handleRegisterUser = async (
     userName?: string,
@@ -43,18 +42,18 @@ const RegisterPage: React.FC = () => {
     }
 
     if (await isAlreadyRegistered(cardInput)) {
-      throwError(t("user-already-exists"))
+      throwError(t("user-already-exists"));
       return;
-    } 
+    }
 
-    let {userInfo, userPinState, userInitTransactionData} =
+    let { userInfo, userPinState, userInitTransactionData } =
       await prepareUserTemplateForRegistration(userName, cardInput, pinInput);
 
     await saveUserInfoAsync(cardInput, userInfo);
     await saveUserPinStateAsync(cardInput, userPinState);
     await saveUserTransactionAsync(cardInput, userInitTransactionData);
 
-    throwMessageUserAccess(t("register-user"),  userInfo)
+    throwMessageUserAccess(t("register-user"), userInfo);
     setCurrentUser(userInfo);
     navigateTo(Page.MAIN);
   };
@@ -62,7 +61,7 @@ const RegisterPage: React.FC = () => {
   return (
     <div>
       <div className="input-form">
-        <h2>Please Provide your card number and PIN</h2>
+        <h2>{t("please-provide-card")}</h2>
         <div>
           <RegisterForm handleRegisterUser={handleRegisterUser} />
         </div>
@@ -70,11 +69,9 @@ const RegisterPage: React.FC = () => {
       <Button
         variant="outlined"
         fullWidth
-        onClick={() => {
-          navigateTo(Page.HOME);
-        }}
+        onClick={() => {navigateTo(Page.HOME)}}
       >
-        RETURN
+        {t("return")}
       </Button>
     </div>
   );

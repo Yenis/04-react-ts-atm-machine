@@ -1,5 +1,5 @@
 import { saveUserPinStateAsync } from "../data/db_pins";
-import { UserPin } from "../helpers/userPinHook";
+import { UserPin } from "./customHooks/userPinHook";
 
 export const handleWrongPinInput = async (cardNumber: string, pinData: UserPin) => {
     const pinState = {

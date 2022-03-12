@@ -1,4 +1,4 @@
-import { User } from "./currentUserHook";
+import { User } from "../customHooks/currentUserHook";
 import { toast, ToastType } from "./ToastManager";
 
 export const throwError = (errorMessage: string) => {

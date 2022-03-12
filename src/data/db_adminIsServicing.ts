@@ -1,7 +1,7 @@
 import { openDB } from "idb";
 import { initializeAtmStateAsync } from "../helpers/initializeSampleData";
 
-const atmDB = "atm-admin-state";
+const atmDB = "atm-admin-db";
 const atmState = "atm-admin-store";
 export const atmNumber = `${atmDB} ${atmState}`;
 

@@ -2,14 +2,14 @@ import { Button } from "@material-ui/core";
 import { Formik, Form } from "formik";
 import { InputFieldNumber } from "./InputFieldNumber";
 import MainMenuHeader from "./MainMenuHeader";
-import Receipt, { TransactionType } from "./PrintedReceipt";
+import PrintedReceipt, { TransactionType } from "./PrintedReceipt";
 import * as yup from "yup";
 import { isPinValid } from "../validation/validatePIN";
 import { isInputPinCorrect } from "../validation/validatePinCorrect";
-import { useUserPin } from "../helpers/userPinHook";
+import { useUserPin } from "../helpers/customHooks/userPinHook";
 import { InputFieldPassword } from "./InputFieldPassword";
-import { throwError } from "../helpers/ToastMessages";
-import { handleWrongPinInput } from "../errors/handleWrongPinInput";
+import { throwError } from "../helpers/toastr/ToastMessages";
+import { handleWrongPinInput } from "../helpers/handleWrongPinInput";
 import { useTranslation } from "react-i18next";
 import Dispenser from "./Dispenser";
 
@@ -23,27 +23,31 @@ interface WithdrawFormProps {
 
 const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
   const { userPinState, setPinState } = useUserPin();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const validateIsInputPinCorrect = async (pinInput?: string) => {
     let isPinInputCorrect;
 
     if (!userPinState.cardNumber) {
-      throwError(t("invalid-card"))
+      throwError(t("invalid-card"));
       return;
     }
 
     if (!pinInput || !isPinValid(pinInput)) {
-      throwError(t("invalid-pin"))
+      throwError(t("invalid-pin"));
       return;
     }
 
     if (userPinState.pin && !isInputPinCorrect(pinInput, userPinState.pin)) {
-      throwError(t("wrong-pin"))
+      throwError(t("wrong-pin"));
 
-      let pinStateOnError = await handleWrongPinInput(userPinState.cardNumber, userPinState)
+      let pinStateOnError = await handleWrongPinInput(
+        userPinState.cardNumber,
+        userPinState
+      );
       setPinState(pinStateOnError);
       isPinInputCorrect = false;
+
     } else {
       isPinInputCorrect = true;
     }
@@ -51,7 +55,7 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
   };
 
   const validationSchema = yup.object({
-    amount: yup.string().required(),
+    amount: yup.string().required(t("required-field"))
   });
 
   return (
@@ -63,6 +67,7 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           pinInput: "",
         }}
         validationSchema={validationSchema}
+
         onSubmit={async (submitData, { setSubmitting }) => {
           setSubmitting(true);
           if (await validateIsInputPinCorrect(submitData.pinInput)) {
@@ -75,22 +80,20 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           <div className="input-form">
             {!props.isComplete && (
               <Form>
-                <InputFieldNumber name="amount" placeholder="Enter Amount..." />
+                <InputFieldNumber name="amount" placeholder={t("enter-amount")} />
                 {!props.isWithdrawing && (
                   <Button
                     variant="contained"
                     disabled={isSubmitting}
                     fullWidth
-                    onClick={() => {
-                      if (values.amount) props.toggleWithdraw(true);
-                    }}
+                    onClick={() => {if (values.amount) props.toggleWithdraw(true)}}
                   >
-                    SUBMIT
+                    {t("submit")}
                   </Button>
                 )}
                 {props.isWithdrawing && (
                   <div>
-                    <InputFieldPassword name="pinInput" placeholder="ENTER PIN" />
+                    <InputFieldPassword name="pinInput" placeholder={t("enter-pin")} />
                     <Button
                       variant="contained"
                       color="secondary"
@@ -98,7 +101,7 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
                       fullWidth
                       type="submit"
                     >
-                      WITHDRAW {values.amount}
+                      {t("withdraw")} {values.amount}
                     </Button>
                   </div>
                 )}
@@ -106,12 +109,12 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             )}
             {props.isComplete && (
               <>
-              <Receipt
-                type={TransactionType.WITHDRAW}
-                isSuccessful={props.isComplete ? true : false}
-                amount={parseFloat(values.amount)}
-              />
-              <Dispenser amount={parseFloat(values.amount)} />
+                <PrintedReceipt
+                  type={TransactionType.WITHDRAW}
+                  isSuccessful={props.isComplete ? true : false}
+                  amount={parseFloat(values.amount)}
+                />
+                <Dispenser amount={parseFloat(values.amount)} />
               </>
             )}
           </div>

@@ -3,14 +3,14 @@ import { Formik, Form } from "formik";
 import { useState } from "react";
 import { InputFieldNumber } from "./InputFieldNumber";
 import MainMenuHeader from "./MainMenuHeader";
-import Receipt, { TransactionType } from "./PrintedReceipt";
+import PrintedReceipt, { TransactionType } from "./PrintedReceipt";
 import * as yup from "yup";
-import { useUserPin } from "../helpers/userPinHook";
+import { useUserPin } from "../helpers/customHooks/userPinHook";
 import { isPinValid } from "../validation/validatePIN";
 import { isInputPinCorrect } from "../validation/validatePinCorrect";
 import { InputFieldPassword } from "./InputFieldPassword";
-import { throwError } from "../helpers/ToastMessages";
-import { handleWrongPinInput } from "../errors/handleWrongPinInput";
+import { throwError } from "../helpers/toastr/ToastMessages";
+import { handleWrongPinInput } from "../helpers/handleWrongPinInput";
 import { useTranslation } from "react-i18next";
 
 interface DepositFormProps {
@@ -58,7 +58,7 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
     pinInput: yup.string()
       .min(5, t("pin-input-length"))
       .max(5, t("pin-input-length"))
-      .required(t("required-field")),
+      .required(t("required-field"))
   });
 
   return (
@@ -70,6 +70,7 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
           pinInput: "",
         }}
         validationSchema={validationSchema}
+        
         onSubmit={async (submitData, { setSubmitting }) => {
           setSubmitting(true);
           if (await validateIsInputPinCorrect(submitData.pinInput)) {
@@ -89,9 +90,7 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
                     variant="contained"
                     disabled={isSubmitting}
                     fullWidth
-                    onClick={() => {
-                      if (values.amount) toggleDeposit(true);
-                    }}
+                    onClick={() => {if (values.amount) toggleDeposit(true)}}
                   >
                     {t("submit")}
                   </Button>
@@ -116,7 +115,7 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
               </Form>
             )}
             {isComplete && (
-              <Receipt
+              <PrintedReceipt
                 type={TransactionType.DEPOSIT}
                 isSuccessful={isComplete ? true : false}
                 amount={parseFloat(values.amount)}

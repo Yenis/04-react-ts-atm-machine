@@ -1,4 +1,5 @@
-import { useTransaction } from "../helpers/transactionsHook";
+import { useTranslation } from "react-i18next";
+import { useTransaction } from "../helpers/customHooks/transactionsHook";
 
 export enum TransactionType {
   WITHDRAW = "WITHDRAW",
@@ -12,39 +13,39 @@ interface ReceiptProps {
   amount?: number;
 }
 
-const Receipt: React.FC<ReceiptProps> = (props) => {
+const PrintedReceipt: React.FC<ReceiptProps> = (props) => {
   const { userTransactions } = useTransaction();
+  const { t } = useTranslation();
 
   return (
     <div className="printed-receipt">
-      <h2>Printed Receipt: {new Date().toLocaleDateString()}</h2>
-
+      <h2>{t("printed-receipt")} {new Date().toLocaleDateString()}</h2>
       <h2>
-        Time:
+        {t("time")}
         {`${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`}
       </h2>
 
       {props.isSuccessful && (
-        <h3>Transaction Success: {props.isSuccessful ? "true" : "false"}</h3>
+        <h3>{t("transaction-success")} {props.isSuccessful ? "true" : "false"}</h3>
       )}
 
-      {props.amount && <h3>Amount: {props.amount}</h3>}
+      {props.amount && <h3>{t("amount")} {props.amount}</h3>}
 
       {props.type === TransactionType.DEPOSIT &&
         typeof props.amount !== "undefined" &&
         typeof userTransactions.balance !== "undefined" && (
-          <h3>Previous balance: {userTransactions.balance - props.amount}</h3>
+          <h3>{t("previous-balance")} {userTransactions.balance - props.amount}</h3>
         )}
 
       {props.type === TransactionType.WITHDRAW &&
         typeof props.amount !== "undefined" &&
         typeof userTransactions.balance !== "undefined" && (
-          <h3>Previous balance: {userTransactions.balance + props.amount}</h3>
+          <h3>{t("previous-balance")} {userTransactions.balance + props.amount}</h3>
         )}
 
-      <h3>Current balance: {userTransactions.balance}</h3>
+      <h3>{t("current-balance")} {userTransactions.balance}</h3>
     </div>
   );
 };
 
-export default Receipt;
+export default PrintedReceipt;

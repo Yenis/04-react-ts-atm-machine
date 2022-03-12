@@ -1,13 +1,15 @@
 import { openDB } from "idb";
-import { UserPin } from "../helpers/userPinHook";
+import { UserPin } from "../helpers/customHooks/userPinHook";
 import { initializeUserPinsOnDbCreationAsync } from "../helpers/initializeSampleData";
 
-const pinsDB = "atm-user-pin";
-const pinsStore = "atm-user-pin-store";
+enum PinDB {
+  DB = "atm-user-pin",
+  STORE = "atm-user-pin-store"
+}
 
-const openAtmUserPinStore = openDB(pinsDB, 1, {
+const openAtmUserPinStore = openDB(PinDB.DB, 1, {
   upgrade(db) {
-    db.createObjectStore(pinsStore);
+    db.createObjectStore(PinDB.STORE);
     initializeUserPinsOnDbCreationAsync();
   },
 });
@@ -15,12 +17,12 @@ const openAtmUserPinStore = openDB(pinsDB, 1, {
 export const getUserPinStateAsync = async (
   cardNumber: IDBKeyRange | IDBValidKey
 ): Promise<UserPin> => {
-  return (await openAtmUserPinStore).get(pinsStore, cardNumber);
+  return (await openAtmUserPinStore).get(PinDB.STORE, cardNumber);
 };
 
 export const saveUserPinStateAsync = async (
   card: IDBKeyRange | IDBValidKey | undefined,
   data: UserPin
 ) => {
-  return (await openAtmUserPinStore).put(pinsStore, data, card);
+  return (await openAtmUserPinStore).put(PinDB.STORE, data, card);
 };

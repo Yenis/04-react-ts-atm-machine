@@ -1,6 +1,6 @@
-import { User } from "../helpers/currentUserHook";
-import { UserBalance } from "../helpers/transactionsHook";
-import { UserPin } from "../helpers/userPinHook";
+import { User } from "../helpers/customHooks/currentUserHook";
+import { UserBalance } from "../helpers/customHooks/transactionsHook";
+import { UserPin } from "../helpers/customHooks/userPinHook";
 
 export interface UserTransaction extends UserBalance {
   transactionType: string;

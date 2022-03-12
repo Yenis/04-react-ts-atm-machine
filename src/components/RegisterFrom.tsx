@@ -3,16 +3,29 @@ import { Formik, Form } from "formik";
 import { InputField } from "./InputField";
 import { InputFieldPassword } from "./InputFieldPassword";
 import * as yup from "yup";
+import { useTranslation } from "react-i18next";
 
 interface RegisterFormProps {
-  handleRegisterUser: (userName: string, cardInput: string, pinInput: string) => void;
+  handleRegisterUser: (
+    userName: string,
+    cardInput: string,
+    pinInput: string
+  ) => void;
 }
 
 const RegisterForm: React.FC<RegisterFormProps> = (props) => {
+  const { t } = useTranslation();
+
   const validationSchema = yup.object({
-    userName: yup.string().required(),
-    cardInput: yup.string().required().min(16).max(16),
-    pinInput: yup.string().required().min(5).max(5),
+    userName: yup.string().required(t("required-field")),
+    cardInput: yup.string()
+      .required(t("required-field"))
+      .min(16, t("pin-input-length"))
+      .max(16, t("pin-input-length")),
+    pinInput: yup.string()
+      .required(t("required-field"))
+      .min(5, t("pin-input-length"))
+      .max(5, t("pin-input-length")),
   });
 
   return (
@@ -24,6 +37,7 @@ const RegisterForm: React.FC<RegisterFormProps> = (props) => {
         pinInput: "",
       }}
       validationSchema={validationSchema}
+
       onSubmit={(submitData, { setSubmitting }) => {
         setSubmitting(true);
         props.handleRegisterUser(
@@ -37,20 +51,22 @@ const RegisterForm: React.FC<RegisterFormProps> = (props) => {
       {({ isSubmitting }) => (
         <Form>
           <div>
-            <InputField name="userName" placeholder="User Name..." />
+            <InputField name="userName" placeholder={t("user-name")} />
           </div>
           <div>
-            <InputField
-              name="cardInput"
-              placeholder="16-digit Card Number..."
-            />
+            <InputField name="cardInput" placeholder={t("card-length")} />
           </div>
           <div>
-            <InputFieldPassword name="pinInput" placeholder="5-digit PIN..." />
+            <InputFieldPassword name="pinInput" placeholder={t("pin-length")} />
           </div>
           <div>
-            <Button variant="contained" fullWidth disabled={isSubmitting} type="submit">
-              REGISTER
+            <Button
+              variant="contained"
+              fullWidth
+              disabled={isSubmitting}
+              type="submit"
+            >
+              {t("register")}
             </Button>
           </div>
         </Form>

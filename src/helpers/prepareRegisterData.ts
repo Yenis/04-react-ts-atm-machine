@@ -1,6 +1,6 @@
 import { TransactionType } from "../components/PrintedReceipt";
-import { User } from "./currentUserHook";
-import { UserPin, DEFAULT_ATT_NUM } from "./userPinHook";
+import { User } from "./customHooks/currentUserHook";
+import { UserPin, DEFAULT as DEFAULT_PIN_ATTEMPTS } from "./customHooks/userPinHook";
 
 export const prepareUserTemplateForRegistration = async (
   userName: string,
@@ -14,7 +14,7 @@ export const prepareUserTemplateForRegistration = async (
   const userPinState: UserPin = {
     cardNumber: cardInput,
     pin: pinInput,
-    remainingPinAttempts: DEFAULT_ATT_NUM,
+    remainingPinAttempts: DEFAULT_PIN_ATTEMPTS,
   };
   const userInitTransactionData = {
     cardNumber: cardInput,

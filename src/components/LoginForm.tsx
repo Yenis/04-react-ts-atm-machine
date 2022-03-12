@@ -12,7 +12,6 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = (props) => {
   const [isCardInserted, toggleInsertCard] = useState(false);
-
   const { t } = useTranslation();
 
   const validationSchema = yup.object({
@@ -23,7 +22,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
     pinInput: yup.string()
       .min(5, t("pin-input-length"))
       .max(5, t("pin-input-length"))
-      .required(t("required-field")),
+      .required(t("required-field"))
   });
 
   return (
@@ -34,6 +33,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
         pinInput: "",
       }}
       validationSchema={validationSchema}
+
       onSubmit={(submitData, { setSubmitting }) => {
         setSubmitting(true);
         props.handleLoginUser(submitData.cardInput, submitData.pinInput);
@@ -53,9 +53,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
               variant="contained"
               fullWidth
               disabled={isSubmitting}
-              onClick={() => {
-                if (values.cardInput) toggleInsertCard(true);
-              }}
+              onClick={() => {if (values.cardInput) toggleInsertCard(true)}}
             >
               {t("insert-card")}
             </Button>

@@ -1,4 +1,4 @@
-import { User } from "../helpers/currentUserHook";
+import { User } from "../helpers/customHooks/currentUserHook";
 import { getAllUsersCardNumbersAsync, getUserInfoAsync } from "./db_users";
 
 class UserStore {

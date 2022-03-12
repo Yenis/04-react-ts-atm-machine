@@ -1,14 +1,16 @@
 import { openDB } from "idb";
-import { UserBalance } from "../helpers/transactionsHook";
+import { UserBalance } from "../helpers/customHooks/transactionsHook";
 import { UserTransaction } from "./nineSampleAccounts";
 import { initializeUserTransactionsOnDbCreationAsync } from "../helpers/initializeSampleData";
 
-const transactionsDB = "atm-user-transactions";
-const transactionsStore = "atm-transactions-store";
+enum TransactionsDB {
+  DB = "atm-user-transactions",
+  STORE = "atm-transactions-store"
+}
 
-const openTransactionsStore = openDB(transactionsDB, 1, {
+const openTransactionsStore = openDB(TransactionsDB.DB, 1, {
   upgrade(db) {
-    db.createObjectStore(transactionsStore);
+    db.createObjectStore(TransactionsDB.STORE);
     initializeUserTransactionsOnDbCreationAsync();
   },
 });
@@ -17,7 +19,7 @@ export const getUserTransactionsAsync = async (
   cardNumber: IDBKeyRange | IDBValidKey
 ): Promise<UserBalance> => {
   return (await openTransactionsStore).get(
-    transactionsStore,
+    TransactionsDB.STORE,
     cardNumber
   );
 };
@@ -27,7 +29,7 @@ export const saveUserTransactionAsync = async (
   data: UserTransaction
 ) => {
   return (await openTransactionsStore).put(
-    transactionsStore,
+    TransactionsDB.STORE,
     data,
     card
   );

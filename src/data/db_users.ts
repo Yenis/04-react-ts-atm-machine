@@ -1,13 +1,15 @@
 import { openDB } from "idb";
-import { User } from "../helpers/currentUserHook";
+import { User } from "../helpers/customHooks/currentUserHook";
 import { initializeUserInfoOnDbCreationAsync } from "../helpers/initializeSampleData";
 
-const usersDB = "atm-users";
-const usersStore = "atm-users-store";
+enum UsersDB {
+  DB = "atm-users",
+  STORE = "atm-users-store"
+}
 
-const openAtmUsersStore = openDB(usersDB, 1, {
+const openAtmUsersStore = openDB(UsersDB.DB, 1, {
   upgrade(db) {
-    db.createObjectStore(usersStore);
+    db.createObjectStore(UsersDB.STORE);
     initializeUserInfoOnDbCreationAsync();
   },
 });
@@ -15,16 +17,16 @@ const openAtmUsersStore = openDB(usersDB, 1, {
 export const getUserInfoAsync = async (
   cardNumber: IDBKeyRange | IDBValidKey
 ): Promise<User> => {
-  return (await openAtmUsersStore).get(usersStore, cardNumber);
+  return (await openAtmUsersStore).get(UsersDB.STORE, cardNumber);
 };
 
 export const saveUserInfoAsync = async (
   card: IDBKeyRange | IDBValidKey | undefined,
   data: User
 ) => {
-  return (await openAtmUsersStore).put(usersStore, data, card);
+  return (await openAtmUsersStore).put(UsersDB.STORE, data, card);
 };
 
 export const getAllUsersCardNumbersAsync = async () => {
-  return (await openAtmUsersStore).getAllKeys(usersStore);
+  return (await openAtmUsersStore).getAllKeys(UsersDB.STORE);
 };

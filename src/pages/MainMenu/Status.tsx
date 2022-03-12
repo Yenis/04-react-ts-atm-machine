@@ -1,16 +1,24 @@
 import { Button } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
-import Receipt from "../../components/PrintedReceipt";
+import PrintedReceipt from "../../components/PrintedReceipt";
 import MainMenuHeader from "../../components/MainMenuHeader";
-import { Page } from "../../helpers/Links";
+import { Page } from "../../helpers/pageLinks";
+import { useTranslation } from "react-i18next";
 
 const StatusPage: React.FC = () => {
   const navigateTo = useNavigate();
+  const { t } = useTranslation();
   return (
     <div>
       <MainMenuHeader />
-      <Receipt />
-      <Button variant="contained" fullWidth onClick={() => navigateTo(Page.MAIN)}>RETURN</Button>
+      <PrintedReceipt />
+      <Button
+        variant="contained"
+        fullWidth
+        onClick={() => navigateTo(Page.MAIN)}
+      >
+        {t("return")}
+      </Button>
     </div>
   );
 };

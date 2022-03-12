@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
-import RetainedCardPage from "../pages/Retained";
+import RetainedCardPage from "../../pages/Retained";
 
-export const DEFAULT_ATT_NUM = 3;
+export const DEFAULT = 3;
 
 export interface UserPin {
   cardNumber: string | undefined;
@@ -12,7 +12,7 @@ export interface UserPin {
 export const noPinData: UserPin = {
   cardNumber: undefined,
   pin: undefined,
-  remainingPinAttempts: DEFAULT_ATT_NUM,
+  remainingPinAttempts: DEFAULT,
 };
 
 export const hasRemainingPinAttempts = (user: UserPin) => {
@@ -20,7 +20,7 @@ export const hasRemainingPinAttempts = (user: UserPin) => {
 };
 
 export const resetPinAttempts = (user: UserPin) => {
-  user.remainingPinAttempts = DEFAULT_ATT_NUM;
+  user.remainingPinAttempts = DEFAULT;
 };
 
 const UserPinContext = createContext({
