@@ -1,9 +1,10 @@
 import { Formik, Form } from "formik";
 import { Button } from "@material-ui/core";
-import { InputField } from "../helpers/InputField";
+import { InputField } from "./InputField";
 import * as yup from "yup";
-import { InputFieldPassword } from "../helpers/InputFieldPassword";
+import { InputFieldPassword } from "./InputFieldPassword";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface LoginFormProps {
   handleLoginUser: (cardInput: string, pinInput: string) => void;
@@ -12,9 +13,17 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = (props) => {
   const [isCardInserted, toggleInsertCard] = useState(false);
 
+  const { t } = useTranslation();
+
   const validationSchema = yup.object({
-    cardInput: yup.string().required().min(16).max(16),
-    pinInput: yup.string().required().min(5).max(5),
+    cardInput: yup.string()
+      .min(16, t("card-input-length"))
+      .max(16, t("card-input-length"))
+      .required(t("required-field")),
+    pinInput: yup.string()
+      .min(5, t("pin-input-length"))
+      .max(5, t("pin-input-length"))
+      .required(t("required-field")),
   });
 
   return (
@@ -36,7 +45,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
           <div>
             <InputField
               name="cardInput"
-              placeholder="16-digit Card Number..."
+              placeholder={t("card-length")}
             />
           </div>
           {!isCardInserted && (
@@ -48,14 +57,14 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                 if (values.cardInput) toggleInsertCard(true);
               }}
             >
-              INSERT CARD
+              {t("insert-card")}
             </Button>
           )}
           {isCardInserted && (
             <div>
               <InputFieldPassword
                 name="pinInput"
-                placeholder="5-digit PIN..."
+                placeholder={t("pin-length")}
               />
               <Button
                 variant="contained"
@@ -63,7 +72,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                 disabled={isSubmitting}
                 type="submit"
               >
-                LOGIN
+                {t("login-button")}
               </Button>
             </div>
           )}

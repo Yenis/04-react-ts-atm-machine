@@ -1,5 +1,4 @@
 import { openDB } from "idb";
-import { toast, ToastType } from "../helpers/ToastManager";
 import { UserBalance } from "../helpers/transactionsHook";
 import { UserTransaction } from "./nineSampleAccounts";
 import { initializeUserTransactionsOnDbCreationAsync } from "../helpers/initializeSampleData";
@@ -27,10 +26,6 @@ export const saveUserTransactionAsync = async (
   card: IDBKeyRange | IDBValidKey | undefined,
   data: UserTransaction
 ) => {
-  toast.show({
-    type: ToastType.SUCCESS,
-    content: "Transaction Completed",
-  });
   return (await openTransactionsStore).put(
     transactionsStore,
     data,

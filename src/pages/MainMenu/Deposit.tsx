@@ -1,27 +1,26 @@
 import { useNavigate } from "react-router-dom";
 import { TransactionType } from "../../components/PrintedReceipt";
-import { toast, ToastType } from "../../helpers/ToastManager";
 import { ActionType, useTransaction } from "../../helpers/transactionsHook";
 import DepositForm from "../../components/DepositForm";
 import { Button } from "@material-ui/core";
 import { Page } from "../../helpers/Links";
 import { saveUserTransactionAsync } from "../../data/db_transactions";
+import { throwError, throwMessage, throwMessageTransactionSuccess } from "../../helpers/ToastMessages";
+import { useTranslation } from "react-i18next";
 
 const DepositPage: React.FC = () => {
 
   const navigateTo = useNavigate();
 
   const { userTransactions, dispatch } = useTransaction();
+  const{t} = useTranslation()
 
   const handleDeposit = async (input: string) => {
     if (typeof userTransactions.balance === "undefined") return;
     if (!userTransactions.cardNumber) return;
     if (!input) return;
     if (parseFloat(input) < 0) {
-      toast.show({
-        type: ToastType.ERROR,
-        content: `Cannot Deposit Negative Value!`,
-      });
+      throwError(t("cannot-deposit-negative"));
       return;
     }
 
@@ -42,10 +41,8 @@ const DepositPage: React.FC = () => {
       balance: userTransactions.balance + parseFloat(input),
     });
 
-    toast.show({
-      type: ToastType.SUCCESS,
-      content: `Deposited ${input} Imaginary Dolars`,
-    });
+    throwMessageTransactionSuccess(t("deposited-amount"), input);
+    throwMessage(t("transaction-completed"))
   };
 
   return (

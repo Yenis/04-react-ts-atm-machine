@@ -1,16 +1,17 @@
 import { Button } from "@material-ui/core";
 import { Formik, Form } from "formik";
 import { useState } from "react";
-import { InputFieldNumber } from "../helpers/InputFieldNumber";
+import { InputFieldNumber } from "./InputFieldNumber";
 import MainMenuHeader from "./MainMenuHeader";
 import Receipt, { TransactionType } from "./PrintedReceipt";
 import * as yup from "yup";
 import { useUserPin } from "../helpers/userPinHook";
-import { saveUserPinStateAsync } from "../data/db_pins";
-import { toast, ToastType } from "../helpers/ToastManager";
 import { isPinValid } from "../validation/validatePIN";
 import { isInputPinCorrect } from "../validation/validatePinCorrect";
-import { InputFieldPassword } from "../helpers/InputFieldPassword";
+import { InputFieldPassword } from "./InputFieldPassword";
+import { throwError } from "../helpers/ToastMessages";
+import { handleWrongPinInput } from "../errors/handleWrongPinInput";
+import { useTranslation } from "react-i18next";
 
 interface DepositFormProps {
   handleDeposit: (amount: string) => void;
@@ -18,34 +19,34 @@ interface DepositFormProps {
 
 const DepositForm: React.FC<DepositFormProps> = (props) => {
   const { userPinState, setPinState } = useUserPin();
+  const { t } = useTranslation();
 
   const [isDepositing, toggleDeposit] = useState(false);
   const [isComplete, completeTransaction] = useState(false);
 
   const validateIsInputPinCorrect = async (pinInput?: string) => {
     let isPinInputCorrect;
+
+    if (!userPinState.cardNumber) {
+      throwError(t("invalid-card"));
+      return;
+    }
+
     if (!pinInput || !isPinValid(pinInput)) {
-      toast.show({
-        type: ToastType.ERROR,
-        content: "Input PIN is not valid!",
-      });
+      throwError(t("invalid-pin"));
       return;
     }
 
     if (userPinState.pin && !isInputPinCorrect(pinInput, userPinState.pin)) {
-      toast.show({
-        type: ToastType.ERROR,
-        content: "Provided PIN is wrong!",
-      });
+      throwError(t("wrong-pin"));
 
-      const newPinState = {
-        ...userPinState,
-        remainingPinAttempts: userPinState.remainingPinAttempts - 1,
-      };
-
-      await saveUserPinStateAsync(userPinState.cardNumber, newPinState);
-      setPinState(newPinState);
+      let pinStateOnError = await handleWrongPinInput(
+        userPinState.cardNumber,
+        userPinState
+      );
+      setPinState(pinStateOnError);
       isPinInputCorrect = false;
+      
     } else {
       isPinInputCorrect = true;
     }
@@ -53,8 +54,11 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
   };
 
   const validationSchema = yup.object({
-    amount: yup.string().required(),
-    pinInput: yup.string().min(5).max(5),
+    amount: yup.string().required(t("required-field")),
+    pinInput: yup.string()
+      .min(5, t("pin-input-length"))
+      .max(5, t("pin-input-length"))
+      .required(t("required-field")),
   });
 
   return (
@@ -89,12 +93,15 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
                       if (values.amount) toggleDeposit(true);
                     }}
                   >
-                    SUBMIT
+                    {t("submit")}
                   </Button>
                 )}
                 {isDepositing && (
                   <div>
-                    <InputFieldPassword name="pinInput" placeholder="ENTER PIN" />
+                    <InputFieldPassword
+                      name="pinInput"
+                      placeholder="ENTER PIN"
+                    />
                     <Button
                       variant="contained"
                       color="primary"
@@ -102,7 +109,7 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
                       fullWidth
                       type="submit"
                     >
-                      DEPOSIT {values.amount}
+                      {t("deposit")} {values.amount}
                     </Button>
                   </div>
                 )}

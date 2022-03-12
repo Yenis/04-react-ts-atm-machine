@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { TransactionType } from "../../components/PrintedReceipt";
-import { toast, ToastType } from "../../helpers/ToastManager";
 import { isTransactionValid } from "../../validation/validateAmount";
 import { ActionType, useTransaction } from "../../helpers/transactionsHook";
 import WithdrawForm from "../../components/WithdrawForm";
 import { Button } from "@material-ui/core";
 import { Page } from "../../helpers/Links";
 import { saveUserTransactionAsync } from "../../data/db_transactions";
+import { throwError, throwErrorCannotWithdrawOver, throwMessage, throwMessageTransactionSuccess, } from "../../helpers/ToastMessages";
+import { useTranslation } from "react-i18next";
 
 const WithdrawPage: React.FC = () => {
 
@@ -15,6 +16,7 @@ const WithdrawPage: React.FC = () => {
   const [isComplete, completeTransaction] = useState(false);
 
   const { userTransactions, dispatch } = useTransaction();
+  const {t} = useTranslation();
 
   const navigateTo = useNavigate();
 
@@ -23,10 +25,7 @@ const WithdrawPage: React.FC = () => {
     if (!userTransactions.cardNumber) return;
     if (!input) return;
     if (parseFloat(input) < 0) {
-      toast.show({
-        type: ToastType.ERROR,
-        content: `Cannot Withdraw Negative Value!`,
-      });
+      throwError(t("cannot-withdraw-negative"))
       return;
     }
 
@@ -47,17 +46,12 @@ const WithdrawPage: React.FC = () => {
         time: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
         balance: userTransactions.balance - parseFloat(input),
       });
-
-      toast.show({
-        type: ToastType.SUCCESS,
-        content: `Withdrawn ${input} Imaginary Dolars`,
-      });
+      throwMessageTransactionSuccess(t("withdrawn-amount"), input);
+      throwMessage(t("transaction-completed"))
       completeTransaction(true);
+
     } else {
-      toast.show({
-        type: ToastType.ERROR,
-        content: `Cannot Withdraw More Cash than Available. Current Status is ${userTransactions.balance}`,
-      });
+      throwErrorCannotWithdrawOver(t("cannot-withdraw-over-amount"), userTransactions.balance);
       toggleWithdraw(false);
     }
   };

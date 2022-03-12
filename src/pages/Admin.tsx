@@ -3,14 +3,16 @@ import { Formik, Form } from "formik";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { transactionStore } from "../data/transactionStore";
-import { InputFieldPassword } from "../helpers/InputFieldPassword";
+import { InputFieldPassword } from "../components/InputFieldPassword";
 import { Page } from "../helpers/Links";
 import * as yup from "yup";
-import { toast, ToastType } from "../helpers/ToastManager";
+import { throwError } from "../helpers/ToastMessages";
+import { useTranslation } from "react-i18next";
 
 const AdminMenu: React.FC = () => {
   const [hasAccess, allowAccess] = useState(false);
   const navigateTo = useNavigate();
+  const {t} = useTranslation();
 
   useEffect(() => {
     transactionStore.assignTotalCashAmountAsync();
@@ -23,10 +25,7 @@ const AdminMenu: React.FC = () => {
     if (inputValue === transactionStore.allUsersTotal.toString()) {
       allowAccess(true);
     } else {
-      toast.show({
-        type: ToastType.ERROR,
-        content: "Input PIN is not valid!",
-      });
+      throwError(t("invalid-pin"))
       navigateTo(Page.HOME)
     }
   }

@@ -58,6 +58,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import App from "./components/App";
 import "./index.css";
+import './i18n/config';
 
 ReactDOM.render(
   <React.StrictMode>

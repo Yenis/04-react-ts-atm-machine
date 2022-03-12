@@ -1,15 +1,17 @@
 import { Button } from "@material-ui/core";
 import { Formik, Form } from "formik";
-import { InputFieldNumber } from "../helpers/InputFieldNumber";
+import { InputFieldNumber } from "./InputFieldNumber";
 import MainMenuHeader from "./MainMenuHeader";
 import Receipt, { TransactionType } from "./PrintedReceipt";
 import * as yup from "yup";
-import { saveUserPinStateAsync } from "../data/db_pins";
-import { toast, ToastType } from "../helpers/ToastManager";
 import { isPinValid } from "../validation/validatePIN";
 import { isInputPinCorrect } from "../validation/validatePinCorrect";
 import { useUserPin } from "../helpers/userPinHook";
-import { InputFieldPassword } from "../helpers/InputFieldPassword";
+import { InputFieldPassword } from "./InputFieldPassword";
+import { throwError } from "../helpers/ToastMessages";
+import { handleWrongPinInput } from "../errors/handleWrongPinInput";
+import { useTranslation } from "react-i18next";
+import Dispenser from "./Dispenser";
 
 interface WithdrawFormProps {
   isWithdrawing: boolean;
@@ -21,30 +23,26 @@ interface WithdrawFormProps {
 
 const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
   const { userPinState, setPinState } = useUserPin();
+  const {t} = useTranslation();
 
   const validateIsInputPinCorrect = async (pinInput?: string) => {
     let isPinInputCorrect;
+
+    if (!userPinState.cardNumber) {
+      throwError(t("invalid-card"))
+      return;
+    }
+
     if (!pinInput || !isPinValid(pinInput)) {
-      toast.show({
-        type: ToastType.ERROR,
-        content: "Input PIN is not valid!",
-      });
+      throwError(t("invalid-pin"))
       return;
     }
 
     if (userPinState.pin && !isInputPinCorrect(pinInput, userPinState.pin)) {
-      toast.show({
-        type: ToastType.ERROR,
-        content: "Provided PIN is wrong!",
-      });
+      throwError(t("wrong-pin"))
 
-      const newPinState = {
-        ...userPinState,
-        remainingPinAttempts: userPinState.remainingPinAttempts - 1,
-      };
-
-      await saveUserPinStateAsync(userPinState.cardNumber, newPinState);
-      setPinState(newPinState);
+      let pinStateOnError = await handleWrongPinInput(userPinState.cardNumber, userPinState)
+      setPinState(pinStateOnError);
       isPinInputCorrect = false;
     } else {
       isPinInputCorrect = true;
@@ -107,11 +105,14 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
               </Form>
             )}
             {props.isComplete && (
+              <>
               <Receipt
                 type={TransactionType.WITHDRAW}
                 isSuccessful={props.isComplete ? true : false}
                 amount={parseFloat(values.amount)}
               />
+              <Dispenser amount={parseFloat(values.amount)} />
+              </>
             )}
           </div>
         )}

@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import { Formik, Form } from "formik";
-import { InputField } from "../helpers/InputField";
-import { InputFieldPassword } from "../helpers/InputFieldPassword";
+import { InputField } from "./InputField";
+import { InputFieldPassword } from "./InputFieldPassword";
 import * as yup from "yup";
 
 interface RegisterFormProps {
@@ -10,7 +10,7 @@ interface RegisterFormProps {
 
 const RegisterForm: React.FC<RegisterFormProps> = (props) => {
   const validationSchema = yup.object({
-    userName: yup.string(),
+    userName: yup.string().required(),
     cardInput: yup.string().required().min(16).max(16),
     pinInput: yup.string().required().min(5).max(5),
   });
