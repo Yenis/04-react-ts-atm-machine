@@ -13,8 +13,8 @@ export const CurrentTime: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h3 style={{color: "darkblue"}}>{time}</h3>
+    <div className="time-date-current">
+      <h3>{time}</h3>
     </div>
   );
 };

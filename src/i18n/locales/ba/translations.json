@@ -30,7 +30,7 @@
   "dispensed-total": "Ukupno izdato novca:",
   "required-field": "Ovo polje je Obavezno",
   "card-input-length": "Broj kartice mora biti tacno 16 cifri",
-  "pin-input-length": "Broj PIN-a mora biti tacno 16 cifri",
+  "pin-input-length": "Broj PIN-a mora biti tacno 5 cifri",
   "card-length": "16-cifreni broj Kartice",
   "pin-length": "5-cifreni PIN broj",
   "insert-card": "UBACI KARTICU",
@@ -62,5 +62,9 @@
   "turn-on": "UPALITI BANKOMAT",
   "service-report-1": "Bankomat je trenutno",
   "service-report-2": "u procesu servisiranja.",
-  "service-report-3": "Molimo pokusajte kasnije."
+  "service-report-3": "Molimo pokusajte kasnije.",
+  "enter-deposit-amount": "Molimo unesite kolicinu pologa novca.",
+  "enter-withdraw-amount": "Molimo unesite kolicinu povrata novca.",
+  "status-page": "Printanje Izvjestaja...",
+  "provide-registration-details": "Unesite potrebne podatke za novog korisnika"
 }

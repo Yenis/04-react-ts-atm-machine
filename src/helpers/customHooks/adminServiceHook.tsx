@@ -1,7 +1,7 @@
-import { Button } from "@material-ui/core";
 import { createContext, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Route, Routes } from "react-router-dom";
+import { ButtonScnd } from "../../components/ButtonsContained";
 import AdminMenu from "../../pages/Admin";
 import RegisterPage from "../../pages/Register";
 import AdminServicePage from "../../pages/Service";
@@ -24,13 +24,12 @@ export const useAtmState = () => {
         value={{ isServicing: inService, toggleService: toggleServiceAtm }}
       >
         {!inService && children}
+
         {inService && (
           <>
             <ServicingReport />
             <Link to={Page.ADMIN}>
-              <Button variant="outlined" color="secondary" fullWidth>
-                {t("admin-menu-button")}
-              </Button>
+              <ButtonScnd>{t("admin-menu-button")}</ButtonScnd>
             </Link>
             <Routes>
               <Route path={Page.SERVICE} element={<AdminServicePage />}></Route>

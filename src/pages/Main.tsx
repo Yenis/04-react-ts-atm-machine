@@ -1,7 +1,5 @@
 import MainMenuButtons from "../components/MainMenuButtons";
-import MainMenuHeader from "../components/MainMenuHeader";
 import { Link } from "react-router-dom";
-import { Button } from "@material-ui/core";
 import { noUser, useCurrentUser } from "../helpers/customHooks/currentUserHook";
 import {
   resetPinAttempts,
@@ -11,6 +9,7 @@ import { Page } from "../helpers/pageLinks";
 import { saveUserPinStateAsync } from "../data/db_pins";
 import { throwMessageUserAccess } from "../helpers/toastr/ToastMessages";
 import { useTranslation } from "react-i18next";
+import { ButtonScnd } from "../components/ButtonsContained";
 
 const MainMenuPage: React.FC = () => {
   const { currentUser, setCurrentUser } = useCurrentUser();
@@ -26,13 +25,12 @@ const MainMenuPage: React.FC = () => {
   };
   return (
     <div>
-      <MainMenuHeader />
       <MainMenuButtons />
       <div>
         <Link to={Page.HOME}>
-          <Button variant="outlined" fullWidth onClick={handleLogOutUser}>
+          <ButtonScnd onClick={handleLogOutUser}>
             {t("logout")}
-          </Button>
+          </ButtonScnd>
         </Link>
       </div>
     </div>

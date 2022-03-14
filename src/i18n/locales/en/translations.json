@@ -62,5 +62,9 @@
   "turn-on": "TURN ON ATM",
   "service-report-1": "ATM Machine is",
   "service-report-2": "currently being serviced.",
-  "service-report-3": "Please come back later."
+  "service-report-3": "Please come back later.",
+  "enter-deposit-amount": "Please provide your deposit amount in the input field.",
+  "enter-withdraw-amount": "Please provide your requested withdraw amount in the input field.",
+  "status-page": "Printing Status Receipt",
+  "provide-registration-details": "Please provide the required information for new user"
 }

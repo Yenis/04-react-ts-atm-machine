@@ -6,9 +6,13 @@ const MainMenuHeader: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="main-menu-header">
-      <h2>{t("welcome")} {currentUser.userName}</h2>
-      <h2>{t("card-number")} {currentUser.cardNumber}</h2>
+    <div className="main-display">
+      {currentUser.userName && (
+        <h3>{t("welcome")} {currentUser.userName}</h3>
+      )}
+      {currentUser.cardNumber && (
+        <h3>{t("card-number")} {currentUser.cardNumber}</h3>
+      )}
     </div>
   );
 };

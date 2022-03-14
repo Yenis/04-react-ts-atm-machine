@@ -12,7 +12,6 @@ export const InputField: React.FC<FieldAttributes<{}>> = ({
       placeholder={placeholder}
       {...field}
       fullWidth
-      autoFocus
       helperText={errorText}
       error={!!errorText}
     />

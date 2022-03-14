@@ -1,10 +1,10 @@
 import { Formik, Form } from "formik";
-import { Button } from "@material-ui/core";
 import { InputField } from "./InputField";
 import * as yup from "yup";
 import { InputFieldPassword } from "./InputFieldPassword";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ButtonPrim } from "./ButtonsContained";
 
 interface LoginFormProps {
   handleLoginUser: (cardInput: string, pinInput: string) => void;
@@ -49,14 +49,12 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
             />
           </div>
           {!isCardInserted && (
-            <Button
-              variant="contained"
-              fullWidth
+            <ButtonPrim
               disabled={isSubmitting}
               onClick={() => {if (values.cardInput) toggleInsertCard(true)}}
             >
               {t("insert-card")}
-            </Button>
+            </ButtonPrim>
           )}
           {isCardInserted && (
             <div>
@@ -64,14 +62,12 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                 name="pinInput"
                 placeholder={t("pin-length")}
               />
-              <Button
-                variant="contained"
-                fullWidth
+              <ButtonPrim
                 disabled={isSubmitting}
                 type="submit"
               >
                 {t("login-button")}
-              </Button>
+              </ButtonPrim>
             </div>
           )}
         </Form>

@@ -62,5 +62,9 @@
   "turn-on": "ATM EINSCHALTEN",
   "service-report-1": "Der Geldautomat",
   "service-report-2": "wird derzeit gewartet.",
-  "service-report-3": "Bitte kommen Sie spater."
+  "service-report-3": "Bitte kommen Sie spater.",
+  "enter-deposit-amount": "Bitte geben Sie Ihren Einzahlungsbetrag in das Eingabefeld ein.",
+  "enter-withdraw-amount": "Bitte geben Sie Ihren gewünschten Auszahlungsbetrag in das Eingabefeld ein.",
+  "status-page": "Statusbeleg drucken",
+  "provide-registration-details": "Bitte geben Sie die erforderlichen Informationen für neue Benutzer an"
 }

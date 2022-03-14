@@ -1,7 +1,5 @@
-import { Button } from "@material-ui/core";
 import { Formik, Form } from "formik";
 import { InputFieldNumber } from "./InputFieldNumber";
-import MainMenuHeader from "./MainMenuHeader";
 import PrintedReceipt, { TransactionType } from "./PrintedReceipt";
 import * as yup from "yup";
 import { isPinValid } from "../validation/validatePIN";
@@ -12,6 +10,7 @@ import { throwError } from "../helpers/toastr/ToastMessages";
 import { handleWrongPinInput } from "../helpers/handleWrongPinInput";
 import { useTranslation } from "react-i18next";
 import Dispenser from "./Dispenser";
+import { ButtonPrim } from "./ButtonsContained";
 
 interface WithdrawFormProps {
   isWithdrawing: boolean;
@@ -47,7 +46,6 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
       );
       setPinState(pinStateOnError);
       isPinInputCorrect = false;
-
     } else {
       isPinInputCorrect = true;
     }
@@ -60,7 +58,6 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
 
   return (
     <>
-      <MainMenuHeader />
       <Formik
         initialValues={{
           amount: "",
@@ -82,27 +79,23 @@ const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
               <Form>
                 <InputFieldNumber name="amount" placeholder={t("enter-amount")} />
                 {!props.isWithdrawing && (
-                  <Button
-                    variant="contained"
+                  <ButtonPrim
                     disabled={isSubmitting}
-                    fullWidth
                     onClick={() => {if (values.amount) props.toggleWithdraw(true)}}
                   >
                     {t("submit")}
-                  </Button>
+                  </ButtonPrim>
                 )}
                 {props.isWithdrawing && (
                   <div>
                     <InputFieldPassword name="pinInput" placeholder={t("enter-pin")} />
-                    <Button
-                      variant="contained"
+                    <ButtonPrim
                       color="secondary"
                       disabled={isSubmitting}
-                      fullWidth
                       type="submit"
                     >
                       {t("withdraw")} {values.amount}
-                    </Button>
+                    </ButtonPrim>
                   </div>
                 )}
               </Form>

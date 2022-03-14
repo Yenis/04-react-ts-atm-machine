@@ -1,17 +1,18 @@
-import { Button } from "@material-ui/core";
 import { Formik, Form } from "formik";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { transactionStore } from "../data/transactionStore";
 import { InputFieldPassword } from "../components/InputFieldPassword";
 import { Page } from "../helpers/pageLinks";
 import * as yup from "yup";
 import { throwError } from "../helpers/toastr/ToastMessages";
 import { useTranslation } from "react-i18next";
+import { ButtonPrim, ButtonScnd } from "../components/ButtonsContained";
+import { useNavigation } from "../helpers/customHooks/navigationHook";
 
 const AdminMenu: React.FC = () => {
   const [hasAccess, allowAccess] = useState(false);
-  const navigateTo = useNavigate();
+  
+  const navigateTo = useNavigation();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -55,23 +56,16 @@ const AdminMenu: React.FC = () => {
                 name="adminPin"
                 placeholder={t("enter-admin-pin")}
               />
-              <Button
-                variant="contained"
+              <ButtonPrim
                 disabled={isSubmitting}
-                fullWidth
-                color="secondary"
                 type="submit"
               >
                 {t("admin-login")}
-              </Button>
+              </ButtonPrim>
               <div>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  onClick={() => navigateTo(Page.HOME)}
-                >
+                <ButtonScnd onClick={() => navigateTo(Page.HOME)}>
                   {t("return")}
-                </Button>
+                </ButtonScnd>
               </div>
             </Form>
           )}
@@ -81,31 +75,19 @@ const AdminMenu: React.FC = () => {
                 <h3>{t("admin-menu")}</h3>
               </div>
               <div>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  onClick={() => navigateTo(Page.REGISTER)}
-                >
+                <ButtonPrim onClick={() => navigateTo(Page.REGISTER)}>
                   {t("register-new-user")}
-                </Button>
+                </ButtonPrim>
               </div>
               <div>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  onClick={() => navigateTo(Page.SERVICE)}
-                >
+                <ButtonPrim onClick={() => navigateTo(Page.SERVICE)}>
                   {t("service-atm")}
-                </Button>
+                </ButtonPrim>
               </div>
               <div>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  onClick={() => navigateTo(Page.HOME)}
-                >
+                <ButtonPrim onClick={() => navigateTo(Page.HOME)}>
                   {t("return")}
-                </Button>
+                </ButtonPrim>
               </div>
             </div>
           )}

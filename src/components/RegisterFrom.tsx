@@ -1,9 +1,9 @@
-import { Button } from "@material-ui/core";
 import { Formik, Form } from "formik";
 import { InputField } from "./InputField";
 import { InputFieldPassword } from "./InputFieldPassword";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
+import { ButtonPrim } from "./ButtonsContained";
 
 interface RegisterFormProps {
   handleRegisterUser: (
@@ -60,14 +60,9 @@ const RegisterForm: React.FC<RegisterFormProps> = (props) => {
             <InputFieldPassword name="pinInput" placeholder={t("pin-length")} />
           </div>
           <div>
-            <Button
-              variant="contained"
-              fullWidth
-              disabled={isSubmitting}
-              type="submit"
-            >
+            <ButtonPrim disabled={isSubmitting} type="submit">
               {t("register")}
-            </Button>
+            </ButtonPrim>
           </div>
         </Form>
       )}

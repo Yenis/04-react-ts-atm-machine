@@ -1,4 +1,5 @@
 export enum Page {
+    // Used both for Navigation Links & Routes
     HOME = "/",
     LOGIN = "/LoginPage",
     REGISTER = "/RegisterPage",
@@ -7,5 +8,10 @@ export enum Page {
     DEPOSIT = "/MainMenu/DepositPage",
     WITHDRAW = "/MainMenu/WithdrawPage",
     ADMIN = "/AdminPage",
-    SERVICE = "/ServicePage"
+    SERVICE = "/ServicePage",
+
+    // Used only for Custom Display
+    NULL = "",
+    PIN = "pin",
+    TRANSACTION = "complete"
 }

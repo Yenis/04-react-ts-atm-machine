@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { TransactionType } from "../../components/PrintedReceipt";
 import { isTransactionPossible } from "../../validation/validateAmount";
@@ -7,7 +6,6 @@ import {
   useTransaction,
 } from "../../helpers/customHooks/transactionsHook";
 import WithdrawForm from "../../components/WithdrawForm";
-import { Button } from "@material-ui/core";
 import { Page } from "../../helpers/pageLinks";
 import { saveUserTransactionAsync } from "../../data/db_transactions";
 import {
@@ -17,6 +15,8 @@ import {
   throwMessageTransactionSuccess,
 } from "../../helpers/toastr/ToastMessages";
 import { useTranslation } from "react-i18next";
+import { ButtonOutlined } from "../../components/ButtonsOutlined";
+import { useNavigation } from "../../helpers/customHooks/navigationHook";
 
 const WithdrawPage: React.FC = () => {
   const [isWithdrawing, toggleWithdraw] = useState(false);
@@ -25,7 +25,7 @@ const WithdrawPage: React.FC = () => {
   const { userTransactions, dispatch } = useTransaction();
   const { t } = useTranslation();
 
-  const navigateTo = useNavigate();
+  const navigateTo = useNavigation();
 
   const handleWithdraw = async (input: string) => {
     if (typeof userTransactions.balance === "undefined") return;
@@ -56,7 +56,6 @@ const WithdrawPage: React.FC = () => {
       throwMessageTransactionSuccess(t("withdrawn-amount"), input);
       throwMessage(t("transaction-completed"));
       completeTransaction(true);
-
     } else {
       throwErrorCannotWithdrawOver(
         t("cannot-withdraw-over-amount"),
@@ -75,13 +74,11 @@ const WithdrawPage: React.FC = () => {
         completeTransaction={completeTransaction}
         handleWithdraw={handleWithdraw}
       />
-      <Button
-        variant="outlined"
-        fullWidth
-        onClick={() => navigateTo(Page.MAIN)}
-      >
-        {t("return")}
-      </Button>
+      <div className="home-page-buttons">
+        <ButtonOutlined onClick={() => navigateTo(Page.MAIN)}>
+          {t("return")}
+        </ButtonOutlined>
+      </div>
     </>
   );
 };

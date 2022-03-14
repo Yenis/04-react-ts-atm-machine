@@ -1,11 +1,7 @@
-import { useNavigate } from "react-router-dom";
-
 import RegisterForm from "../components/RegisterFrom";
 import { isCardValid } from "../validation/validateCard";
 import { isAlreadyRegistered } from "../validation/validateUnique";
-import { useCurrentUser } from "../helpers/customHooks/currentUserHook";
 import { isPinValid } from "../validation/validatePIN";
-import { Button } from "@material-ui/core";
 import { Page } from "../helpers/pageLinks";
 import { saveUserPinStateAsync } from "../data/db_pins";
 import { saveUserTransactionAsync } from "../data/db_transactions";
@@ -16,11 +12,12 @@ import {
 } from "../helpers/toastr/ToastMessages";
 import { prepareUserTemplateForRegistration } from "../helpers/prepareRegisterData";
 import { useTranslation } from "react-i18next";
+import { ButtonOutlined } from "../components/ButtonsOutlined";
+import { useNavigation } from "../helpers/customHooks/navigationHook";
 
 const RegisterPage: React.FC = () => {
-  const { setCurrentUser } = useCurrentUser();
+  const navigateTo = useNavigation();
   const { t } = useTranslation();
-  const navigateTo = useNavigate();
 
   const handleRegisterUser = async (
     userName?: string,
@@ -54,8 +51,7 @@ const RegisterPage: React.FC = () => {
     await saveUserTransactionAsync(cardInput, userInitTransactionData);
 
     throwMessageUserAccess(t("register-user"), userInfo);
-    setCurrentUser(userInfo);
-    navigateTo(Page.MAIN);
+    navigateTo(Page.HOME);
   };
 
   return (
@@ -66,13 +62,9 @@ const RegisterPage: React.FC = () => {
           <RegisterForm handleRegisterUser={handleRegisterUser} />
         </div>
       </div>
-      <Button
-        variant="outlined"
-        fullWidth
-        onClick={() => {navigateTo(Page.HOME)}}
-      >
+      <ButtonOutlined onClick={() => navigateTo(Page.HOME)}>
         {t("return")}
-      </Button>
+      </ButtonOutlined>
     </div>
   );
 };

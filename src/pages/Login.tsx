@@ -1,10 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/LoginForm";
 import { isCardValid } from "../validation/validateCard";
 import { isPinValid } from "../validation/validatePIN";
 import { useUserPin } from "../helpers/customHooks/userPinHook";
 import { useCurrentUser } from "../helpers/customHooks/currentUserHook";
-import { Button } from "@material-ui/core";
 import { Page } from "../helpers/pageLinks";
 import { isInputPinCorrect } from "../validation/validatePinCorrect";
 import {
@@ -15,12 +13,13 @@ import { handleWrongPinInput } from "../helpers/handleWrongPinInput";
 import { useTranslation } from "react-i18next";
 import { getUserInfoAsync } from "../data/db_users";
 import { getUserPinStateAsync } from "../data/db_pins";
+import { ButtonOutlined } from "../components/ButtonsOutlined";
+import { useNavigation } from "../helpers/customHooks/navigationHook";
 
 const LoginPage: React.FC = () => {
   const { setCurrentUser } = useCurrentUser();
   const { setPinState } = useUserPin();
-
-  const navigateTo = useNavigate();
+  const navigateTo = useNavigation();
   const { t } = useTranslation();
 
   const handleLoginUser = async (cardInput?: string, pinInput?: string) => {
@@ -54,20 +53,11 @@ const LoginPage: React.FC = () => {
   return (
     <div>
       <div className="input-form">
-        <h3>{t("please-provide-card")}</h3>
-        <div>
-          <LoginForm handleLoginUser={handleLoginUser} />
-        </div>
+        <LoginForm handleLoginUser={handleLoginUser} />
       </div>
-      <Button
-        variant="outlined"
-        fullWidth
-        onClick={() => {
-          navigateTo(Page.HOME);
-        }}
-      >
+      <ButtonOutlined onClick={() => navigateTo(Page.HOME)}>
         {t("return")}
-      </Button>
+      </ButtonOutlined>
     </div>
   );
 };

@@ -1,8 +1,6 @@
-import { Button } from "@material-ui/core";
 import { Formik, Form } from "formik";
 import { useState } from "react";
 import { InputFieldNumber } from "./InputFieldNumber";
-import MainMenuHeader from "./MainMenuHeader";
 import PrintedReceipt, { TransactionType } from "./PrintedReceipt";
 import * as yup from "yup";
 import { useUserPin } from "../helpers/customHooks/userPinHook";
@@ -12,6 +10,7 @@ import { InputFieldPassword } from "./InputFieldPassword";
 import { throwError } from "../helpers/toastr/ToastMessages";
 import { handleWrongPinInput } from "../helpers/handleWrongPinInput";
 import { useTranslation } from "react-i18next";
+import { ButtonPrim } from "./ButtonsContained";
 
 interface DepositFormProps {
   handleDeposit: (amount: string) => void;
@@ -63,7 +62,6 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
 
   return (
     <>
-      <MainMenuHeader />
       <Formik
         initialValues={{
           amount: "",
@@ -84,32 +82,27 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
           <div className="input-form">
             {!isComplete && (
               <Form>
-                <InputFieldNumber name="amount" placeholder="Enter Amount..." />
+                <InputFieldNumber name="amount" placeholder={t("enter-amount")} />
                 {!isDepositing && (
-                  <Button
-                    variant="contained"
+                  <ButtonPrim
                     disabled={isSubmitting}
-                    fullWidth
                     onClick={() => {if (values.amount) toggleDeposit(true)}}
                   >
                     {t("submit")}
-                  </Button>
+                  </ButtonPrim>
                 )}
                 {isDepositing && (
                   <div>
                     <InputFieldPassword
                       name="pinInput"
-                      placeholder="ENTER PIN"
+                      placeholder={t("enter-pin")}
                     />
-                    <Button
-                      variant="contained"
-                      color="primary"
+                    <ButtonPrim
                       disabled={isSubmitting}
-                      fullWidth
                       type="submit"
                     >
                       {t("deposit")} {values.amount}
-                    </Button>
+                    </ButtonPrim>
                   </div>
                 )}
               </Form>

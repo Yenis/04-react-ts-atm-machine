@@ -1,11 +1,9 @@
-import { useNavigate } from "react-router-dom";
 import { TransactionType } from "../../components/PrintedReceipt";
 import {
   ActionType,
   useTransaction,
 } from "../../helpers/customHooks/transactionsHook";
 import DepositForm from "../../components/DepositForm";
-import { Button } from "@material-ui/core";
 import { Page } from "../../helpers/pageLinks";
 import { saveUserTransactionAsync } from "../../data/db_transactions";
 import {
@@ -14,10 +12,12 @@ import {
   throwMessageTransactionSuccess,
 } from "../../helpers/toastr/ToastMessages";
 import { useTranslation } from "react-i18next";
+import { ButtonOutlined } from "../../components/ButtonsOutlined";
+import { useNavigation } from "../../helpers/customHooks/navigationHook";
 
 const DepositPage: React.FC = () => {
   const { userTransactions, dispatch } = useTransaction();
-  const navigateTo = useNavigate();
+  const navigateTo = useNavigation();
   const { t } = useTranslation();
 
   const handleDeposit = async (input: string) => {
@@ -53,13 +53,11 @@ const DepositPage: React.FC = () => {
   return (
     <>
       <DepositForm handleDeposit={handleDeposit} />
-      <Button
-        variant="outlined"
-        fullWidth
-        onClick={() => navigateTo(Page.MAIN)}
-      >
-        {t("return")}
-      </Button>
+      <div className="home-page-buttons">
+        <ButtonOutlined onClick={() => navigateTo(Page.MAIN)}>
+          {t("return")}
+        </ButtonOutlined>
+      </div>
     </>
   );
 };
