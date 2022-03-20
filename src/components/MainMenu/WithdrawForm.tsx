@@ -1,27 +1,28 @@
 import { Formik, Form } from "formik";
-import { useState } from "react";
-import { InputFieldNumber } from "./InputFieldNumber";
+import { InputFieldNumber } from "../InputFieldNumber";
+import { InputFieldPassword } from "../InputFieldPassword";
+import { ButtonSubmit, ButtonWithdraw } from "../VariousButtons";
 import PrintedReceipt, { TransactionType } from "./PrintedReceipt";
-import * as yup from "yup";
-import { useUserPin } from "../helpers/customHooks/userPinHook";
-import { isPinValid } from "../validation/validatePIN";
-import { isInputPinCorrect } from "../validation/validatePinCorrect";
-import { InputFieldPassword } from "./InputFieldPassword";
-import { throwError } from "../helpers/toastr/ToastMessages";
-import { handleWrongPinInput } from "../helpers/handleWrongPinInput";
+import { isPinValid } from "../../validation/validatePIN";
+import { isInputPinCorrect } from "../../validation/validatePinCorrect";
+import { useUserPin } from "../../helpers/customHooks/userPinHook";
+import { throwError } from "../../helpers/toastr/ToastMessages";
+import { handleWrongPinInput } from "../../helpers/handleWrongPinInput";
 import { useTranslation } from "react-i18next";
-import { ButtonPrim } from "./ButtonsContained";
+import Dispenser from "./Dispenser";
+import * as yup from "yup";
 
-interface DepositFormProps {
-  handleDeposit: (amount: string) => void;
+interface WithdrawFormProps {
+  isWithdrawing: boolean;
+  toggleWithdraw: React.Dispatch<React.SetStateAction<boolean>>;
+  isComplete: boolean;
+  handleWithdraw: (amount: string) => void;
+  completeTransaction: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DepositForm: React.FC<DepositFormProps> = (props) => {
+const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
   const { userPinState, setPinState } = useUserPin();
   const { t } = useTranslation();
-
-  const [isDepositing, toggleDeposit] = useState(false);
-  const [isComplete, completeTransaction] = useState(false);
 
   const validateIsInputPinCorrect = async (pinInput?: string) => {
     let isPinInputCorrect;
@@ -53,11 +54,7 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
   };
 
   const validationSchema = yup.object({
-    amount: yup.string().required(t("required-field")),
-    pinInput: yup.string()
-      .min(5, t("pin-input-length"))
-      .max(5, t("pin-input-length"))
-      .required(t("required-field"))
+    amount: yup.string().required(t("required-field"))
   });
 
   return (
@@ -68,51 +65,51 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
           pinInput: "",
         }}
         validationSchema={validationSchema}
-        
+
         onSubmit={async (submitData, { setSubmitting }) => {
           setSubmitting(true);
           if (await validateIsInputPinCorrect(submitData.pinInput)) {
-            props.handleDeposit(submitData.amount);
-            completeTransaction(true);
+            props.handleWithdraw(submitData.amount);
           }
           setSubmitting(false);
         }}
       >
         {({ values, isSubmitting }) => (
           <div className="input-form">
-            {!isComplete && (
+            {!props.isComplete && (
               <Form>
                 <InputFieldNumber name="amount" placeholder={t("enter-amount")} />
-                {!isDepositing && (
-                  <ButtonPrim
+                {!props.isWithdrawing && (
+                  <ButtonSubmit
                     disabled={isSubmitting}
-                    onClick={() => {if (values.amount) toggleDeposit(true)}}
+                    onClick={() => {if (values.amount) props.toggleWithdraw(true)}}
                   >
                     {t("submit")}
-                  </ButtonPrim>
+                  </ButtonSubmit>
                 )}
-                {isDepositing && (
+                {props.isWithdrawing && (
                   <div>
-                    <InputFieldPassword
-                      name="pinInput"
-                      placeholder={t("enter-pin")}
-                    />
-                    <ButtonPrim
+                    <InputFieldPassword name="pinInput" placeholder={t("enter-pin")} />
+                    <ButtonWithdraw
+                      color="secondary"
                       disabled={isSubmitting}
                       type="submit"
                     >
-                      {t("deposit")} {values.amount}
-                    </ButtonPrim>
+                      {t("withdraw")} {values.amount}
+                    </ButtonWithdraw>
                   </div>
                 )}
               </Form>
             )}
-            {isComplete && (
-              <PrintedReceipt
-                type={TransactionType.DEPOSIT}
-                isSuccessful={isComplete ? true : false}
-                amount={parseFloat(values.amount)}
-              />
+            {props.isComplete && (
+              <>
+                <PrintedReceipt
+                  type={TransactionType.WITHDRAW}
+                  isSuccessful={props.isComplete ? true : false}
+                  amount={parseFloat(values.amount)}
+                />
+                <Dispenser amount={parseFloat(values.amount)} />
+              </>
             )}
           </div>
         )}
@@ -121,4 +118,4 @@ const DepositForm: React.FC<DepositFormProps> = (props) => {
   );
 };
 
-export default DepositForm;
+export default WithdrawForm;

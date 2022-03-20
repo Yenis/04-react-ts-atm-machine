@@ -1,4 +1,4 @@
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../components/MainMenu/LoginForm";
 import { isCardValid } from "../validation/validateCard";
 import { isPinValid } from "../validation/validatePIN";
 import { useUserPin } from "../helpers/customHooks/userPinHook";
@@ -13,12 +13,13 @@ import { handleWrongPinInput } from "../helpers/handleWrongPinInput";
 import { useTranslation } from "react-i18next";
 import { getUserInfoAsync } from "../data/db_users";
 import { getUserPinStateAsync } from "../data/db_pins";
-import { ButtonOutlined } from "../components/ButtonsOutlined";
+import { ButtonReturnOut } from "../components/VariousButtons";
 import { useNavigation } from "../helpers/customHooks/navigationHook";
 
 const LoginPage: React.FC = () => {
   const { setCurrentUser } = useCurrentUser();
   const { setPinState } = useUserPin();
+  
   const navigateTo = useNavigation();
   const { t } = useTranslation();
 
@@ -55,9 +56,9 @@ const LoginPage: React.FC = () => {
       <div className="input-form">
         <LoginForm handleLoginUser={handleLoginUser} />
       </div>
-      <ButtonOutlined onClick={() => navigateTo(Page.HOME)}>
+      <ButtonReturnOut onClick={() => navigateTo(Page.HOME)}>
         {t("return")}
-      </ButtonOutlined>
+      </ButtonReturnOut>
     </div>
   );
 };

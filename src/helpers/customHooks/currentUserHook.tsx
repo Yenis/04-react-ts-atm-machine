@@ -15,6 +15,11 @@ export const defaultUser: User = {
   userName: "defaultUser"
 }
 
+export const admin: User = {
+  cardNumber: "-1",
+  userName: "ADMIN"
+}
+
 const CurrentUserContext = createContext({
   currentUser: noUser,
   setCurrentUser: (user: User) => {},

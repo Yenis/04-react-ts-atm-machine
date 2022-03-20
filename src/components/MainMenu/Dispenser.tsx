@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-interface DispenserProps{
+interface DispenserProps {
     amount: number
 }
  
 const Dispenser: React.FC<DispenserProps> = (props) => {
     const [notes, setNotes] = useState(0);
     const [change, setChange] = useState(0);
+    
     const { t } = useTranslation();
 
     const handleDispense = (amount: number) => {

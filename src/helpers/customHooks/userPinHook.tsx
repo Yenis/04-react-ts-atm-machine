@@ -1,4 +1,6 @@
 import { createContext, useContext, useState } from "react";
+import { Page } from "../pageLinks";
+import { useDisplay } from "./displayScreenHook";
 import RetainedCardPage from "../../pages/Retained";
 
 export const DEFAULT = 3;
@@ -15,10 +17,6 @@ export const noPinData: UserPin = {
   remainingPinAttempts: DEFAULT,
 };
 
-export const hasRemainingPinAttempts = (user: UserPin) => {
-  return user.remainingPinAttempts > 0;
-};
-
 export const resetPinAttempts = (user: UserPin) => {
   user.remainingPinAttempts = DEFAULT;
 };
@@ -33,12 +31,25 @@ export const useUserPin = () => {
 
   const { userPinState, setPinState } = useContext(UserPinContext);
 
+  const { setActivePage, PageProvider } = useDisplay();
+
+  const hasRemainingPinAttempts = (user: UserPin) => {
+    if (user.remainingPinAttempts > 0) {
+      return true;
+    } else {
+      setActivePage(Page.RETAINED)
+      return false;
+    }
+  };
+
   const UserPinProvider = ({ children }: any) => {
     return (
-      <UserPinContext.Provider value={{ userPinState: pin, setPinState: setPin }}>
-        {hasRemainingPinAttempts(pin) && children}
-        {!hasRemainingPinAttempts(pin) && <RetainedCardPage />}
-      </UserPinContext.Provider>
+      <PageProvider>
+        <UserPinContext.Provider value={{ userPinState: pin, setPinState: setPin }}>
+          {hasRemainingPinAttempts(pin) && children}
+          {!hasRemainingPinAttempts(pin) && <RetainedCardPage />}
+        </UserPinContext.Provider>
+      </PageProvider>
     );
   };
 

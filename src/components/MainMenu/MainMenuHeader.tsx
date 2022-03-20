@@ -1,4 +1,4 @@
-import { useCurrentUser } from "../helpers/customHooks/currentUserHook";
+import { useCurrentUser } from "../../helpers/customHooks/currentUserHook";
 import { useTranslation } from "react-i18next";
 
 const MainMenuHeader: React.FC = () => {

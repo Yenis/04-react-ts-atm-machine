@@ -1,7 +1,7 @@
 export enum Page {
-    // Used both for Navigation Links & Routes
     HOME = "/",
     LOGIN = "/LoginPage",
+    ADMIN_LOGIN = "AdminLogin",
     REGISTER = "/RegisterPage",
     MAIN = "/MainMenu",
     STATUS = "/MainMenu/StatusPage",
@@ -9,9 +9,7 @@ export enum Page {
     WITHDRAW = "/MainMenu/WithdrawPage",
     ADMIN = "/AdminPage",
     SERVICE = "/ServicePage",
-
-    // Used only for Custom Display
-    NULL = "",
-    PIN = "pin",
-    TRANSACTION = "complete"
+    IN_SERVICE = "/Servicing",
+    RETAINED = "/RetainedCardPage",
+    REDACTED = "/RedactedPage"
 }

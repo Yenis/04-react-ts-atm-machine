@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useCurrentUser } from "../helpers/customHooks/currentUserHook";
+import { useCurrentUser } from "../../helpers/customHooks/currentUserHook";
 
 export const CurrentUser: React.FC = () => {
   const { currentUser } = useCurrentUser();

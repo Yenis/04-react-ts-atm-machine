@@ -1,10 +1,10 @@
-import { Formik, Form } from "formik";
-import { InputField } from "./InputField";
-import * as yup from "yup";
-import { InputFieldPassword } from "./InputFieldPassword";
 import { useState } from "react";
+import { Formik, Form } from "formik";
+import { InputField } from "../InputField";
+import { InputFieldPassword } from "../InputFieldPassword";
+import { ButtonInsertCard, ButtonLogin } from "../VariousButtons";
 import { useTranslation } from "react-i18next";
-import { ButtonPrim } from "./ButtonsContained";
+import * as yup from "yup";
 
 interface LoginFormProps {
   handleLoginUser: (cardInput: string, pinInput: string) => void;
@@ -44,17 +44,17 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
         <Form>
           <div>
             <InputField
-              name="cardInput"
+              name="cardInput"   
               placeholder={t("card-length")}
             />
           </div>
           {!isCardInserted && (
-            <ButtonPrim
+            <ButtonInsertCard
               disabled={isSubmitting}
               onClick={() => {if (values.cardInput) toggleInsertCard(true)}}
             >
               {t("insert-card")}
-            </ButtonPrim>
+            </ButtonInsertCard>
           )}
           {isCardInserted && (
             <div>
@@ -62,12 +62,12 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                 name="pinInput"
                 placeholder={t("pin-length")}
               />
-              <ButtonPrim
+              <ButtonLogin
                 disabled={isSubmitting}
                 type="submit"
               >
                 {t("login-button")}
-              </ButtonPrim>
+              </ButtonLogin>
             </div>
           )}
         </Form>

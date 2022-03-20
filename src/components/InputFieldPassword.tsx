@@ -9,10 +9,11 @@ export const InputFieldPassword: React.FC<FieldAttributes<{}>> = ({
   const errorText = meta.error && meta.touched ? meta.error : "";
   return (
     <TextField
-      placeholder={placeholder}
       type="password"
       {...field}
       fullWidth
+      variant="outlined"
+      placeholder={placeholder}
       helperText={errorText}
       error={!!errorText}
     />

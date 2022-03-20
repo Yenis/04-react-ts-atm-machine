@@ -66,5 +66,6 @@
   "enter-deposit-amount": "Please provide your deposit amount in the input field.",
   "enter-withdraw-amount": "Please provide your requested withdraw amount in the input field.",
   "status-page": "Printing Status Receipt",
-  "provide-registration-details": "Please provide the required information for new user"
+  "provide-registration-details": "Please provide the required information for new user",
+  "session-lost": "Login Session lost, please try again"
 }

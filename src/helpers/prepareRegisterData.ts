@@ -1,6 +1,7 @@
-import { TransactionType } from "../components/PrintedReceipt";
+import { TransactionType } from "../components/MainMenu/PrintedReceipt";
 import { User } from "./customHooks/currentUserHook";
 import { UserPin, DEFAULT as DEFAULT_PIN_ATTEMPTS } from "./customHooks/userPinHook";
+import { getDateTimeUtc } from "./getDateTimeUTC";
 
 export const prepareUserTemplateForRegistration = async (
   userName: string,
@@ -20,8 +21,7 @@ export const prepareUserTemplateForRegistration = async (
     cardNumber: cardInput,
     transactionType: TransactionType.INIT,
     amount: 0,
-    date: new Date().toLocaleDateString(),
-    time: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+    transactionTime: getDateTimeUtc(),
     balance: 0,
   };
 

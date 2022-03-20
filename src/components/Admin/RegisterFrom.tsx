@@ -1,9 +1,9 @@
 import { Formik, Form } from "formik";
-import { InputField } from "./InputField";
-import { InputFieldPassword } from "./InputFieldPassword";
-import * as yup from "yup";
+import { InputField } from "../InputField";
+import { ButtonRegister } from "../VariousButtons";
+import { InputFieldPassword } from "../InputFieldPassword";
 import { useTranslation } from "react-i18next";
-import { ButtonPrim } from "./ButtonsContained";
+import * as yup from "yup";
 
 interface RegisterFormProps {
   handleRegisterUser: (
@@ -60,9 +60,9 @@ const RegisterForm: React.FC<RegisterFormProps> = (props) => {
             <InputFieldPassword name="pinInput" placeholder={t("pin-length")} />
           </div>
           <div>
-            <ButtonPrim disabled={isSubmitting} type="submit">
+            <ButtonRegister disabled={isSubmitting} type="submit">
               {t("register")}
-            </ButtonPrim>
+            </ButtonRegister>
           </div>
         </Form>
       )}

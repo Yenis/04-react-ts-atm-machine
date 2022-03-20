@@ -66,5 +66,6 @@
   "enter-deposit-amount": "Bitte geben Sie Ihren Einzahlungsbetrag in das Eingabefeld ein.",
   "enter-withdraw-amount": "Bitte geben Sie Ihren gewünschten Auszahlungsbetrag in das Eingabefeld ein.",
   "status-page": "Statusbeleg drucken",
-  "provide-registration-details": "Bitte geben Sie die erforderlichen Informationen für neue Benutzer an"
+  "provide-registration-details": "Bitte geben Sie die erforderlichen Informationen für neue Benutzer an",
+  "session-lost": "Anmeldesitzung verloren, bitte versuchen Sie es erneut"
 }

@@ -1,8 +1,10 @@
-import PrintedReceipt from "../../components/PrintedReceipt";
+import PrintedReceipt from "../../components/MainMenu/PrintedReceipt";
 import { Page } from "../../helpers/pageLinks";
 import { useTranslation } from "react-i18next";
-import { ButtonPrim } from "../../components/ButtonsContained";
+import { ButtonReturn } from "../../components/VariousButtons";
 import { useNavigation } from "../../helpers/customHooks/navigationHook";
+import React from "react";
+import withAuth from "../../helpers/userAuthenticationHOC";
 
 const StatusPage: React.FC = () => {
   const navigateTo = useNavigation();
@@ -10,11 +12,12 @@ const StatusPage: React.FC = () => {
   return (
     <div className="status-page">
       <PrintedReceipt />
-      <ButtonPrim onClick={() => navigateTo(Page.MAIN)}>
+      
+      <ButtonReturn onClick={() => navigateTo(Page.MAIN)}>
         {t("return")}
-      </ButtonPrim>
+      </ButtonReturn>
     </div>
   );
 };
 
-export default StatusPage;
+export default withAuth(StatusPage);

@@ -1,9 +1,9 @@
-import { TransactionType } from "../../components/PrintedReceipt";
 import {
   ActionType,
   useTransaction,
 } from "../../helpers/customHooks/transactionsHook";
-import DepositForm from "../../components/DepositForm";
+import { TransactionType } from "../../components/MainMenu/PrintedReceipt";
+import DepositForm from "../../components/MainMenu/DepositForm";
 import { Page } from "../../helpers/pageLinks";
 import { saveUserTransactionAsync } from "../../data/db_transactions";
 import {
@@ -12,8 +12,11 @@ import {
   throwMessageTransactionSuccess,
 } from "../../helpers/toastr/ToastMessages";
 import { useTranslation } from "react-i18next";
-import { ButtonOutlined } from "../../components/ButtonsOutlined";
+import { ButtonReturnOut } from "../../components/VariousButtons";
 import { useNavigation } from "../../helpers/customHooks/navigationHook";
+import { getDateTimeUtc } from "../../helpers/getDateTimeUTC";
+import { transactionStore } from "../../data/transactionStore";
+import withAuth from "../../helpers/userAuthenticationHOC";
 
 const DepositPage: React.FC = () => {
   const { userTransactions, dispatch } = useTransaction();
@@ -41,10 +44,11 @@ const DepositPage: React.FC = () => {
       cardNumber: userTransactions.cardNumber,
       transactionType: TransactionType.DEPOSIT,
       amount: parseFloat(input),
-      date: new Date().toLocaleDateString(),
-      time: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+      transactionTime: getDateTimeUtc(),
       balance: userTransactions.balance + parseFloat(input),
     });
+
+    await transactionStore.assignTotalCashAmountAsync();
 
     throwMessageTransactionSuccess(t("deposited-amount"), input);
     throwMessage(t("transaction-completed"));
@@ -54,12 +58,12 @@ const DepositPage: React.FC = () => {
     <>
       <DepositForm handleDeposit={handleDeposit} />
       <div className="home-page-buttons">
-        <ButtonOutlined onClick={() => navigateTo(Page.MAIN)}>
+        <ButtonReturnOut onClick={() => navigateTo(Page.MAIN)}>
           {t("return")}
-        </ButtonOutlined>
+        </ButtonReturnOut>
       </div>
     </>
   );
 };
 
-export default DepositPage;
+export default withAuth(DepositPage);

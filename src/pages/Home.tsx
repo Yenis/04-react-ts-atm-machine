@@ -1,25 +1,27 @@
 import React from "react";
 import { Page } from "../helpers/pageLinks";
 import { useTranslation } from "react-i18next";
-import { ButtonPrim, ButtonScnd } from "../components/ButtonsContained";
+import { ButtonAdminMenu, ButtonLogin } from "../components/VariousButtons";
 import { useNavigation } from "../helpers/customHooks/navigationHook";
 
-export const HomePage: React.FC = () => {
+const HomePage: React.FC = () => {
   const navigateTo = useNavigation();
   const { t } = useTranslation();
 
   return (
     <>
       <div className="home-page-buttons">
-        <ButtonPrim onClick={() => navigateTo(Page.LOGIN)}>
+        <ButtonLogin  onClick={() => navigateTo(Page.LOGIN)}>
           {t("login-button")}
-        </ButtonPrim>
+        </ButtonLogin>
       </div>
       <div className="home-page-buttons">
-        <ButtonScnd onClick={() => navigateTo(Page.ADMIN)}>
+        <ButtonAdminMenu onClick={() => navigateTo(Page.ADMIN_LOGIN)}>
           {t("admin-menu-button")}
-        </ButtonScnd>
+        </ButtonAdminMenu>
       </div>
     </>
   );
 };
+
+export default HomePage;

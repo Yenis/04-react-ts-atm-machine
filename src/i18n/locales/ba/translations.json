@@ -66,5 +66,6 @@
   "enter-deposit-amount": "Molimo unesite kolicinu pologa novca.",
   "enter-withdraw-amount": "Molimo unesite kolicinu povrata novca.",
   "status-page": "Printanje Izvjestaja...",
-  "provide-registration-details": "Unesite potrebne podatke za novog korisnika"
+  "provide-registration-details": "Unesite potrebne podatke za novog korisnika",
+  "session-lost": "Sesija prijave je izgubljena, molimo pokusajte ponovo"
 }

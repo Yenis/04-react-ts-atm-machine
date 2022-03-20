@@ -1,4 +1,4 @@
-import RegisterForm from "../components/RegisterFrom";
+import RegisterForm from "../components/Admin/RegisterFrom";
 import { isCardValid } from "../validation/validateCard";
 import { isAlreadyRegistered } from "../validation/validateUnique";
 import { isPinValid } from "../validation/validatePIN";
@@ -12,8 +12,9 @@ import {
 } from "../helpers/toastr/ToastMessages";
 import { prepareUserTemplateForRegistration } from "../helpers/prepareRegisterData";
 import { useTranslation } from "react-i18next";
-import { ButtonOutlined } from "../components/ButtonsOutlined";
+import { ButtonReturnOut } from "../components/VariousButtons";
 import { useNavigation } from "../helpers/customHooks/navigationHook";
+import withAuth from "../helpers/userAuthenticationHOC";
 
 const RegisterPage: React.FC = () => {
   const navigateTo = useNavigation();
@@ -57,16 +58,16 @@ const RegisterPage: React.FC = () => {
   return (
     <div>
       <div className="input-form">
-        <h2>{t("please-provide-card")}</h2>
+        <h3>{t("please-provide-card")}</h3>
         <div>
           <RegisterForm handleRegisterUser={handleRegisterUser} />
         </div>
       </div>
-      <ButtonOutlined onClick={() => navigateTo(Page.HOME)}>
+      <ButtonReturnOut onClick={() => navigateTo(Page.ADMIN)}>
         {t("return")}
-      </ButtonOutlined>
+      </ButtonReturnOut>
     </div>
   );
 };
 
-export default RegisterPage;
+export default withAuth(RegisterPage);

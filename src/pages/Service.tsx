@@ -1,28 +1,33 @@
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { ButtonPrim, ButtonScnd } from "../components/ButtonsContained";
+import { ButtonPowerSetting, ButtonReturn } from "../components/VariousButtons";
 import { atmNumber, saveAtmStateAsync } from "../data/db_adminIsServicing";
 import { transactionStore } from "../data/transactionStore";
 import { useAtmState } from "../helpers/customHooks/adminServiceHook";
+import { useDisplay } from "../helpers/customHooks/displayScreenHook";
 import { useNavigation } from "../helpers/customHooks/navigationHook";
 import { centerText } from "../helpers/inlineStyles";
 import { Page } from "../helpers/pageLinks";
+import withAuth from "../helpers/userAuthenticationHOC";
 
 const AdminServicePage: React.FC = () => {
-  const { isServicing, toggleService } = useAtmState();
-  const navigateTo = useNavigation();
+  const { isServicing, setServiceState } = useAtmState();
+  const { setActivePage } = useDisplay();
 
+  const navigateTo = useNavigation();
   const { t } = useTranslation();
 
-  useEffect(() => {
-    console.log(transactionStore.allUsersTotal);
-  });
+  const handleServiceToggleOff = async () => {
+    setServiceState(false);
+    await saveAtmStateAsync(atmNumber, false);
+    navigateTo(Page.ADMIN);    
+  };
 
-  const handleServiceToggle = async () => {
-    toggleService(!isServicing);
-    await saveAtmStateAsync(atmNumber, !isServicing);
+  const handleServiceToggleOn = async () => {
+    setServiceState(true);
+    await saveAtmStateAsync(atmNumber, true);
     navigateTo(Page.ADMIN);
+    setActivePage(Page.IN_SERVICE);
   };
 
   return (
@@ -33,17 +38,17 @@ const AdminServicePage: React.FC = () => {
           {t("total-cash")} : _{transactionStore.allUsersTotal}_
         </h4>
         {!isServicing && (
-          <ButtonScnd onClick={handleServiceToggle}>{t("turn-off")}</ButtonScnd>
+          <ButtonPowerSetting onClick={handleServiceToggleOn}>{t("turn-off")}</ButtonPowerSetting>
         )}
         {isServicing && (
-          <ButtonScnd onClick={handleServiceToggle}>{t("turn-on")}</ButtonScnd>
+          <ButtonPowerSetting onClick={handleServiceToggleOff}>{t("turn-on")}</ButtonPowerSetting>
         )}
       </div>
-      <Link to={Page.ADMIN}>
-        <ButtonPrim>{t("return")}</ButtonPrim>
+      <Link to={Page.ADMIN} style={{textDecoration: 'none'}}>
+        <ButtonReturn color="primary">{t("return")}</ButtonReturn>
       </Link>
     </div>
   );
 };
 
-export default AdminServicePage;
+export default withAuth(AdminServicePage);

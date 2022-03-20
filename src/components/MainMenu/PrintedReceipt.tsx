@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useTransaction } from "../helpers/customHooks/transactionsHook";
+import { useTransaction } from "../../helpers/customHooks/transactionsHook";
 
 export enum TransactionType {
   WITHDRAW = "WITHDRAW",
@@ -20,10 +20,9 @@ const PrintedReceipt: React.FC<ReceiptProps> = (props) => {
   return (
     <div className="printed-receipt">
       <h2>{t("printed-receipt")} {new Date().toLocaleDateString()}</h2>
-      <h2>
-        {t("time")}
-        {`${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`}
-      </h2>
+      
+      <h2>{t("time")}</h2>
+      <h2>{`${new Date().toUTCString()}`}</h2>
 
       {props.isSuccessful && (
         <h3>{t("transaction-success")} {props.isSuccessful ? "true" : "false"}</h3>

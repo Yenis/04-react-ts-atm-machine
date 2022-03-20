@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { TransactionType } from "../../components/PrintedReceipt";
-import { isTransactionPossible } from "../../validation/validateAmount";
 import {
   ActionType,
   useTransaction,
 } from "../../helpers/customHooks/transactionsHook";
-import WithdrawForm from "../../components/WithdrawForm";
+import { TransactionType } from "../../components/MainMenu/PrintedReceipt";
+import { isTransactionPossible } from "../../validation/validateAmount";
+import WithdrawForm from "../../components/MainMenu/WithdrawForm";
 import { Page } from "../../helpers/pageLinks";
 import { saveUserTransactionAsync } from "../../data/db_transactions";
 import {
@@ -15,17 +15,19 @@ import {
   throwMessageTransactionSuccess,
 } from "../../helpers/toastr/ToastMessages";
 import { useTranslation } from "react-i18next";
-import { ButtonOutlined } from "../../components/ButtonsOutlined";
+import { ButtonReturnOut } from "../../components/VariousButtons";
 import { useNavigation } from "../../helpers/customHooks/navigationHook";
+import { getDateTimeUtc } from "../../helpers/getDateTimeUTC";
+import { transactionStore } from "../../data/transactionStore";
+import withAuth from "../../helpers/userAuthenticationHOC";
 
 const WithdrawPage: React.FC = () => {
   const [isWithdrawing, toggleWithdraw] = useState(false);
   const [isComplete, completeTransaction] = useState(false);
 
   const { userTransactions, dispatch } = useTransaction();
-  const { t } = useTranslation();
-
   const navigateTo = useNavigation();
+  const { t } = useTranslation();
 
   const handleWithdraw = async (input: string) => {
     if (typeof userTransactions.balance === "undefined") return;
@@ -49,10 +51,12 @@ const WithdrawPage: React.FC = () => {
         cardNumber: userTransactions.cardNumber,
         transactionType: TransactionType.WITHDRAW,
         amount: parseFloat(input),
-        date: new Date().toLocaleDateString(),
-        time: `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`,
+        transactionTime: getDateTimeUtc(),
         balance: userTransactions.balance - parseFloat(input),
       });
+
+      await transactionStore.assignTotalCashAmountAsync();
+
       throwMessageTransactionSuccess(t("withdrawn-amount"), input);
       throwMessage(t("transaction-completed"));
       completeTransaction(true);
@@ -75,12 +79,12 @@ const WithdrawPage: React.FC = () => {
         handleWithdraw={handleWithdraw}
       />
       <div className="home-page-buttons">
-        <ButtonOutlined onClick={() => navigateTo(Page.MAIN)}>
+        <ButtonReturnOut onClick={() => navigateTo(Page.MAIN)}>
           {t("return")}
-        </ButtonOutlined>
+        </ButtonReturnOut>
       </div>
     </>
   );
 };
 
-export default WithdrawPage;
+export default withAuth(WithdrawPage);

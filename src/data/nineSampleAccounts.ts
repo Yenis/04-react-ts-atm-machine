@@ -1,16 +1,13 @@
 import { User } from "../helpers/customHooks/currentUserHook";
 import { UserBalance } from "../helpers/customHooks/transactionsHook";
 import { UserPin } from "../helpers/customHooks/userPinHook";
+import { getDateTimeUtc } from "../helpers/getDateTimeUTC";
 
 export interface UserTransaction extends UserBalance {
+  transactionTime: Date;
   transactionType: string;
   amount: number;
-  date: string;
-  time: string;
 }
-
-const dateToday = new Date().toLocaleDateString();
-const timeNow = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`;
 
 export const sampleAccounts: User[] = [
   {
@@ -104,72 +101,63 @@ export const sampleTransactions: UserTransaction[] = [
     cardNumber: "1111111111111111",
     transactionType: "TEST",
     amount: 0,
-    date: dateToday,
-    time: timeNow,
+    transactionTime: getDateTimeUtc(),
     balance: 0,
   },
   {
     cardNumber: "2222222222222222",
     transactionType: "TEST",
     amount: 0,
-    date: dateToday,
-    time: timeNow,
+    transactionTime: getDateTimeUtc(),
     balance: 1000,
   },
   {
     cardNumber: "3333333333333333",
     transactionType: "TEST",
     amount: 0,
-    date: dateToday,
-    time: timeNow,
+    transactionTime: getDateTimeUtc(),
     balance: 5000,
   },
   {
     cardNumber: "4444444444444444",
     transactionType: "TEST",
     amount: 0,
-    date: dateToday,
-    time: timeNow,
+    transactionTime: getDateTimeUtc(),
     balance: 12345,
   },
   {
     cardNumber: "5555555555555555",
     transactionType: "TEST",
     amount: 0,
-    date: dateToday,
-    time: timeNow,
+    transactionTime: getDateTimeUtc(),
     balance: 55555,
   },
   {
     cardNumber: "6666666666666666",
     transactionType: "TEST",
     amount: 0,
-    date: dateToday,
-    time: timeNow,
+    transactionTime: getDateTimeUtc(),
     balance: 66666,
   },
   {
     cardNumber: "7777777777777777",
     transactionType: "TEST",
     amount: 0,
-    date: dateToday,
-    time: timeNow,
+    transactionTime: getDateTimeUtc(),
     balance: 70000,
   },
   {
     cardNumber: "8888888888888888",
     transactionType: "TEST",
     amount: 0,
-    date: dateToday,
-    time: timeNow,
+    transactionTime: getDateTimeUtc(),
     balance: 100000,
   },
   {
     cardNumber: "9999999999999999",
     transactionType: "TEST",
     amount: 0,
-    date: dateToday,
-    time: timeNow,
+    transactionTime: getDateTimeUtc(),
     balance: 15000000,
   },
 ];

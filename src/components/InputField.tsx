@@ -8,10 +8,11 @@ export const InputField: React.FC<FieldAttributes<{}>> = ({
   const [field, meta] = useField<{}>(props);
   const errorText = meta.error && meta.touched ? meta.error : "";
   return (
-    <TextField
-      placeholder={placeholder}
+    <TextField 
       {...field}
       fullWidth
+      variant="outlined"
+      placeholder={placeholder}
       helperText={errorText}
       error={!!errorText}
     />

@@ -10,6 +10,6 @@ export const useNavigation = () => {
         setActivePage(page);
         open(page);
     }
-    
+
     return navigateTo;
 }

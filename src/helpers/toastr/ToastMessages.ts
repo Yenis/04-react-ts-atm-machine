@@ -10,7 +10,7 @@ export const throwError = (errorMessage: string) => {
 
 export const throwMessage = (message: string) => {
   toast.show({
-    type: ToastType.ERROR,
+    type: ToastType.SUCCESS,
     content: message,
   });
 };
