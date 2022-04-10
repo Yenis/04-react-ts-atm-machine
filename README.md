@@ -3,11 +3,14 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ATM Machine built using React with Typescript.
+
 Formik and MaterialUI were used for Forms, Input Fields, Buttons and Icons.
+
 Has User and Admin Account and PIN Authentication.
 
 Provides 9 Sample Users on first load.
 All user data and transactions is saved locally using IndexedDB.
+
 Displays Info messages using Toastr.
 
 Additional Features - Supports 3 Languages - English, German and Bosnian.
